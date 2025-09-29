@@ -1,6 +1,11 @@
 import { FC } from 'react';
-import MainPage from './components/MainPage/mainPage';
+import MainPage from './pages/MainPage/mainPage';
+import { MainPageProps } from './components/types';
 
-const App: FC = () => <MainPage />;
+type AppProps = {
+  mainPageData: MainPageProps;
+}
+
+const App: FC<AppProps> = ({mainPageData}) => <MainPage {...mainPageData}/>;
 
 export default App;
