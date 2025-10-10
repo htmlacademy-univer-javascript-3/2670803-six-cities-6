@@ -6,21 +6,32 @@ import NotFoundPage from './pages/NotFound/notFoundPage';
 import LoginPage from './pages/LoginPage/loginPage';
 import FavoritesPage from './pages/FavoritesPage/favoritesPage';
 import OfferPage from './pages/OfferPage/offerPage';
+import PrivateRoute from './components/PrivateRoute/privateRoute';
 
 type AppProps = {
   mainPageData: MainPageProps;
 }
 
-const App: FC<AppProps> = ({mainPageData}) => (
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<MainPage {...mainPageData} />} />
-      <Route path="*" element={<NotFoundPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/favorites" element={<FavoritesPage />} />
-      <Route path="/offer/:id" element={<OfferPage />} />
-    </Routes>
-  </BrowserRouter>
-);
+const App: FC<AppProps> = ({mainPageData}) => {
+  const isAuthorized = false;
+
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainPage {...mainPageData} />} />
+        <Route path="*" element={<NotFoundPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/favorites" element={
+          <PrivateRoute isAuthorized={isAuthorized}>
+            <FavoritesPage />
+          </PrivateRoute>
+        }
+        />
+        <Route path="/offer/:id" element={<OfferPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
 export default App;
