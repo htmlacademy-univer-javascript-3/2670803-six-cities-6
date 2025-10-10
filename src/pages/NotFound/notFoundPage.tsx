@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
+import styles from './notFoundPage.module.css';
 
 const NotFoundPage: FC = () => (
   <div className="page">
@@ -30,15 +31,14 @@ const NotFoundPage: FC = () => (
         </div>
       </div>
     </header>
-    <main className='page__main page__main-not_found'>
-      <div className='container not-found'></div>
-      <h1>404</h1>
-      <p>Упс! Страница не найдена</p>
-      <Link className='button' to="/">Вернуться на главную страницу</Link>
+    <main className={styles.pageMain}>
+      <h1 className={styles.title}>404</h1>
+      <p className={styles.text}>Упс! Страница не найдена</p>
+      <Link className={styles.button} to="/">Вернуться на главную</Link>
     </main>
     <footer className="footer container">
       <Link className='footer__logo-link' to="/">
-         <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width="64" height="33" />
+        <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width="64" height="33" />
       </Link>
     </footer>
   </div>
