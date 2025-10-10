@@ -1,14 +1,15 @@
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 
-const notFoundPage: FC = () => (
+const NotFoundPage: FC = () => (
   <div className="page">
     <header className="header">
       <div className="container">
         <div className="header__wrapper">
           <div className="header__left">
-            <a className="header__logo-link" href="main.html">
+            <Link className="header__logo-link" to="/">
               <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
-            </a>
+            </Link>
           </div>
           <nav className="header__nav">
             <ul className="header__nav-list">
@@ -33,13 +34,14 @@ const notFoundPage: FC = () => (
       <div className='container not-found'></div>
       <h1>404</h1>
       <p>Упс! Страница не найдена</p>
+      <Link className='button' to="/">Вернуться на главную страницу</Link>
     </main>
     <footer className="footer container">
-      <a className="footer__logo-link" href="main.html">
-        <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width="64" height="33" />
-      </a>
+      <Link className='footer__logo-link' to="/">
+         <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width="64" height="33" />
+      </Link>
     </footer>
   </div>
 );
 
-export default notFoundPage;
+export default NotFoundPage;
