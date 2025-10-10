@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-const offerPage: FC = () => (
+const OfferPage: FC = () => (
   <div className="page">
     <header className="header">
       <div className="container">
@@ -336,4 +336,4 @@ const offerPage: FC = () => (
   </div>
 );
 
-export default offerPage;
+export default OfferPage;
