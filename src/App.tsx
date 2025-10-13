@@ -15,19 +15,15 @@ type AppProps = {
 const App: FC<AppProps> = ({mainPageData}) => {
   const isAuthorized = false;
 
-
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainPage {...mainPageData} />} />
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/favorites" element={
-          <PrivateRoute isAuthorized={isAuthorized}>
-            <FavoritesPage />
-          </PrivateRoute>
-        }
-        />
+        <Route element={<PrivateRoute isAuthorized={isAuthorized} />}>
+          <Route path="/favorites" element={<FavoritesPage />} />
+        </Route>
         <Route path="/offer/:id" element={<OfferPage />} />
       </Routes>
     </BrowserRouter>
