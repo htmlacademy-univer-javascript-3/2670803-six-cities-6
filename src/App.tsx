@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage/loginPage';
 import FavoritesPage from './pages/FavoritesPage/favoritesPage';
 import OfferPage from './pages/OfferPage/offerPage';
 import PrivateRoute from './components/PrivateRoute/privateRoute';
+import { offers } from './mocks/offers';
 
 type AppProps = {
   mainPageData: MainPageProps;
@@ -15,19 +16,15 @@ type AppProps = {
 const App: FC<AppProps> = ({mainPageData}) => {
   const isAuthorized = false;
 
-
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainPage {...mainPageData} />} />
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/favorites" element={
-          <PrivateRoute isAuthorized={isAuthorized}>
-            <FavoritesPage />
-          </PrivateRoute>
-        }
-        />
+        <Route element={<PrivateRoute isAuthorized={isAuthorized} />}>
+          <Route path="/favorites" element={<FavoritesPage offers={offers} />} />
+        </Route>
         <Route path="/offer/:id" element={<OfferPage />} />
       </Routes>
     </BrowserRouter>

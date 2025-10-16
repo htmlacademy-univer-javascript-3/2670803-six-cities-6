@@ -10,7 +10,7 @@ const OfferList: FC<OfferListProps> = ({ offers }) => {
   const [activeOffer, setActiveOffer] = useState<string | null>(null);
 
   return (
-    <div className="cities__places-list places__list">
+    <div className="cities__places-list places__list tabs__content">
       {offers.map((offer) => (
         <PlaceCard
           key={offer.id}
