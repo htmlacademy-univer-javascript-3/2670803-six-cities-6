@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import { offers } from './mocks/offers';
 
 const mainPageData = {
-  offerCount: 312,
+  offerCount: offers.length,
+  offers: offers,
 };
 
 const root = ReactDOM.createRoot(
