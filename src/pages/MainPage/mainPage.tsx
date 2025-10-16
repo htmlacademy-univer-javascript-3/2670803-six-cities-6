@@ -3,7 +3,7 @@ import PlaceCard from '../../components/PlaceCard/placeCard';
 import { MainPageProps } from '../../components/types';
 import { Link } from 'react-router-dom';
 
-const MainPage: FC<MainPageProps> = ({ offerCount }) => (
+const MainPage: FC<MainPageProps> = ({ offers, offerCount }) => (
   <div className="page page--gray page--main">
     <header className="header">
       <div className="container">
@@ -93,12 +93,9 @@ const MainPage: FC<MainPageProps> = ({ offerCount }) => (
               </ul>
             </form>
             <div className="cities__places-list places__list tabs__content">
-              <PlaceCard />
-              <PlaceCard />
-              <PlaceCard />
-              <PlaceCard />
-              <PlaceCard />
-              <PlaceCard />
+              {offers.map((offer) => (
+                <PlaceCard key={offer.id} offer={offer} />
+              ))}
             </div>
           </section>
           <div className="cities__right-section">

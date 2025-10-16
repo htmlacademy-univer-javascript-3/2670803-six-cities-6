@@ -1,12 +1,19 @@
-import { FC } from 'react';
+import { FC, MouseEvent } from 'react';
 import { Offer } from '../../mocks/types/offer';
 
 type PlaceCardProps = {
   offer: Offer;
+  onMouseEnter?: (e: MouseEvent<HTMLElement>) => void;
+  onMouseLeave?: (e: MouseEvent<HTMLElement>) => void;
+  isActive?: boolean;
 }
 
-const PlaceCard: FC<PlaceCardProps> = ({ offer }) => (
-  <article className="cities__card place-card">
+const PlaceCard: FC<PlaceCardProps> = ({ offer, onMouseEnter, onMouseLeave, isActive}) => (
+  <article
+    className={`cities__card place-card ${isActive ? 'place-card--active' : ''}`}
+    onMouseEnter={onMouseEnter}
+    onMouseLeave={onMouseLeave}
+  >
     {offer.isPremium && (
       <div className="place-card__mark">
         <span>Premium</span>
