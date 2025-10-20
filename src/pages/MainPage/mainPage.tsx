@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { MainPageProps } from '../../components/types';
 import { Link } from 'react-router-dom';
 import OfferList from '../../components/OfferList/offerList';
+import Map from '../../components/Map/map';
 
 const MainPage: FC<MainPageProps> = ({ offers, offerCount }) => (
   <div className="page page--gray page--main">
@@ -95,7 +96,7 @@ const MainPage: FC<MainPageProps> = ({ offers, offerCount }) => (
             <OfferList offers={offers} />
           </section>
           <div className="cities__right-section">
-            <section className="cities__map map"></section>
+            <Map offers={offers} />
           </div>
         </div>
       </div>
