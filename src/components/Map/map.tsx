@@ -14,7 +14,7 @@ type MapProps = {
   offers: Offer[];
 };
 
-const Map: FC<MapProps> = ({ offers }) => {
+const OfferMap: FC<MapProps> = ({ offers }) => {
   const city = offers[0]?.location;
 
   if (!city) {
@@ -46,4 +46,4 @@ const Map: FC<MapProps> = ({ offers }) => {
   );
 };
 
-export default Map;
+export default OfferMap;
