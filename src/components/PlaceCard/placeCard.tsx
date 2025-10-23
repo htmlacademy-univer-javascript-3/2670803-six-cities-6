@@ -7,11 +7,12 @@ type PlaceCardProps = {
   onMouseEnter?: (e: MouseEvent<HTMLElement>) => void;
   onMouseLeave?: (e: MouseEvent<HTMLElement>) => void;
   isActive?: boolean;
+  className?: string;
 }
 
-const PlaceCard: FC<PlaceCardProps> = ({ offer, onMouseEnter, onMouseLeave, isActive}) => (
+const PlaceCard: FC<PlaceCardProps> = ({ offer, onMouseEnter, onMouseLeave, isActive, className = 'cities__card'}) => (
   <article
-    className={`cities__card place-card ${isActive ? 'place-card--active' : ''}`}
+    className={`${className} place-card ${isActive ? 'place-card--active' : ''}`}
     onMouseEnter={onMouseEnter}
     onMouseLeave={onMouseLeave}
   >

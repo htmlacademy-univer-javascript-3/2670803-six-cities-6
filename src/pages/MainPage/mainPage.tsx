@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { MainPageProps } from '../../components/types';
 import { Link } from 'react-router-dom';
 import OfferList from '../../components/OfferList/offerList';
-import Map from '../../components/Map/map';
+import OfferMap from '../../components/Map/map';
 
 const MainPage: FC<MainPageProps> = ({ offers, offerCount }) => (
   <div className="page page--gray page--main">
@@ -41,32 +41,32 @@ const MainPage: FC<MainPageProps> = ({ offers, offerCount }) => (
         <section className="locations container">
           <ul className="locations__list tabs__list">
             <li className="locations__item">
-              <Link className="locations__item-link tabs__item" to="/paris">
+              <Link className="locations__item-link tabs__item" to="/">
                 <span>Paris</span>
               </Link>
             </li>
             <li className="locations__item">
-              <Link className="locations__item-link tabs__item" to="/cologne">
+              <Link className="locations__item-link tabs__item" to="/">
                 <span>Cologne</span>
               </Link>
             </li>
             <li className="locations__item">
-              <Link className="locations__item-link tabs__item" to="/brussels">
+              <Link className="locations__item-link tabs__item" to="/">
                 <span>Brussels</span>
               </Link>
             </li>
             <li className="locations__item">
-              <Link className="locations__item-link tabs__item" to="/amsterdam">
+              <Link className="locations__item-link tabs__item" to="/">
                 <span>Amsterdam</span>
               </Link>
             </li>
             <li className="locations__item">
-              <Link className="locations__item-link tabs__item" to="/hamburg">
+              <Link className="locations__item-link tabs__item" to="/">
                 <span>Hamburg</span>
               </Link>
             </li>
             <li className="locations__item">
-              <Link className="locations__item-link tabs__item" to="/dusseldorf">
+              <Link className="locations__item-link tabs__item" to="/">
                 <span>Dusseldorf</span>
               </Link>
             </li>
@@ -96,7 +96,7 @@ const MainPage: FC<MainPageProps> = ({ offers, offerCount }) => (
             <OfferList offers={offers} />
           </section>
           <div className="cities__right-section">
-            <Map offers={offers} />
+            <OfferMap offers={offers} />
           </div>
         </div>
       </div>
