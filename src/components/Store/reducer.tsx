@@ -6,7 +6,7 @@ export type StateType = {
 };
 
 export const initialState: StateType = {
-  city: 'Amsterdam',
+  city: 'Paris',
   offers: [],
 };
 

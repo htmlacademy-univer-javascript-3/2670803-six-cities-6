@@ -15,14 +15,14 @@ type AppProps = {
   mainPageData: MainPageProps;
 }
 
-const App: FC<AppProps> = ({mainPageData}) => {
+const App: FC<AppProps> = () => {
   const isAuthorized = false;
 
   return (
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<MainPage {...mainPageData} />} />
+          <Route path="/" element={<MainPage />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route element={<PrivateRoute isAuthorized={isAuthorized} />}>
