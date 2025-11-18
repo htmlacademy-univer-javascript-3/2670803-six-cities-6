@@ -24,7 +24,7 @@ type SetOffersAction = {
 
 export type ActionType = SetCityAction | SetOffersAction;
 
-export const reducer = (state: StateType, action: ActionType): StateType => {
+export const reducer = (state: StateType = initialState, action: ActionType): StateType => {
   switch (action.type) {
     case SET_CITY:
       return { ...state, city: action.payload };
