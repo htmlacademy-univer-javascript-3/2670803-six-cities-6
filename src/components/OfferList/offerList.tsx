@@ -4,7 +4,7 @@ import PlaceCard from '../PlaceCard/placeCard';
 
 type OfferListProps = {
   offers: Offer[];
-  onOfferHover: (offerId: string | null) => void;
+  onOfferHover?: (offerId: string | null) => void;
 }
 
 const OfferList: FC<OfferListProps> = ({ offers, onOfferHover }) => (
@@ -13,8 +13,8 @@ const OfferList: FC<OfferListProps> = ({ offers, onOfferHover }) => (
       <PlaceCard
         key={offer.id}
         offer={offer}
-        onMouseEnter={() => onOfferHover(offer.id)}
-        onMouseLeave={() => onOfferHover(null)}
+        onMouseEnter={() => onOfferHover?.(offer.id)}
+        onMouseLeave={() => onOfferHover?.(null)}
       />
     ))}
   </div>

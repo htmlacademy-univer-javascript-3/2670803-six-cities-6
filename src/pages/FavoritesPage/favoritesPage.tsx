@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import OfferList from '../../components/OfferList/offerList';
 import { FavoritesPageProps } from '../../components/types';
 
-const FavoritesPage: FC<FavoritesPageProps> = ({ offers }) => (
+const FavoritesPage: FC<FavoritesPageProps> = ({ offers, onOfferHover }) => (
   <div className="page">
     <header className="header">
       <div className="container">
@@ -38,7 +38,10 @@ const FavoritesPage: FC<FavoritesPageProps> = ({ offers }) => (
       <div className="page__favorites-container container">
         <section className="favorites">
           <h1 className="favorites__title">Saved listing</h1>
-          <OfferList offers={offers} />
+          <OfferList
+            offers={offers}
+            onOfferHover={onOfferHover}
+          />
         </section>
       </div>
     </main>
