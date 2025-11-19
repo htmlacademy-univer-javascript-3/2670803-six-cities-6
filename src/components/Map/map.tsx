@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Offer } from '../../mocks/types/offer';
+import { MapUpdater } from '../MapUpdater/mapUpdater';
 
 const defaultCustomIcon = leaflet.icon({
   iconUrl: '/img/pin.svg',
@@ -28,6 +29,8 @@ const OfferMap: FC<MapProps> = ({ offers }) => {
       scrollWheelZoom
       className='cities__map map'
     >
+
+      <MapUpdater offers={offers} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
