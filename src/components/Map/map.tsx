@@ -20,6 +20,7 @@ const activeCustomIcon = leaflet.icon({
 type MapProps = {
   offers: Offer[];
   activeOfferId?: string | null;
+
 };
 
 const OfferMap: FC<MapProps> = ({ offers, activeOfferId }) => {
