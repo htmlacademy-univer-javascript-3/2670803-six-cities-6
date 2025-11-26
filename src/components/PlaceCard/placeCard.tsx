@@ -1,13 +1,13 @@
-import { FC, MouseEvent } from 'react';
+import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Offer } from '../../mocks/types/offer';
 
 type PlaceCardProps = {
   offer: Offer;
-  onMouseEnter?: (e: MouseEvent<HTMLElement>) => void;
-  onMouseLeave?: (e: MouseEvent<HTMLElement>) => void;
   isActive?: boolean;
   className?: string;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
 }
 
 const PlaceCard: FC<PlaceCardProps> = ({ offer, onMouseEnter, onMouseLeave, isActive, className = 'cities__card'}) => (
