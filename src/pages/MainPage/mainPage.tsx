@@ -1,21 +1,26 @@
-import { FC, useState } from 'react';
-import { MainPageProps } from '../../components/types';
+import { FC, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import OfferList from '../../components/OfferList/offerList';
 import OfferMap from '../../components/Map/map';
-import { RootState } from '../../components/Store';
+import { RootState, AppDispatch } from '../../components/Store';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCity } from '../../components/Store/action';
 import CitiesList from '../../components/CitiesList/cititesList';
 import SortOptions, { SortType } from '../../components/SortOptions/sortOptions';
+import { fetchOffers } from '../../components/Store/api-actions';
 
-const MainPage: FC<MainPageProps> = ({ offers }) => {
-  const dispatch = useDispatch();
+const MainPage: FC = () => {
+  const dispatch: AppDispatch = useDispatch();
   const selectedCity = useSelector((state: RootState) => state.city);
-  const filteredOffers = offers.filter((offer) => offer.city === selectedCity);
+  const offers = useSelector((state: RootState) => state.offers);
   const [currentSort, setCurrentSort] = useState<SortType>('Popular');
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
 
+  useEffect(() => {
+    dispatch(fetchOffers());
+  }, [dispatch]);
+
+  const filteredOffers = offers.filter((offer) => offer.city.name === selectedCity);
   const sortedOffers = [...filteredOffers].sort((a,b) => {
     switch (currentSort) {
       case 'Price: low to high':
@@ -28,7 +33,6 @@ const MainPage: FC<MainPageProps> = ({ offers }) => {
         return 0;
     }
   });
-
   const filteredOfferCount = sortedOffers.length;
 
   const handleCitychange = (city: string) => {

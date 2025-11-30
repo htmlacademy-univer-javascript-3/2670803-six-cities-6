@@ -1,4 +1,4 @@
-import { Offer } from '../mocks/types/offer';
+import { Offer } from '../api/types/offer';
 
 export interface MainPageProps {
   offers: Offer[];

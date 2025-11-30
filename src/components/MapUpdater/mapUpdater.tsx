@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react';
 import { useMap } from 'react-leaflet';
-import { Offer } from '../../mocks/types/offer';
+import { Offer } from '../../api/types/offer';
 
 interface MapUpdaterProps {
   offers: Offer[];

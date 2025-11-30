@@ -1,9 +1,32 @@
-export type Offer = {
+// export type Offer = {
+//   id: string;
+//   title: string;
+//   type: string;
+//   price: number;
+//   city: string;
+//   location: {
+//     latitude: number;
+//     longitude: number;
+//     zoom: number;
+//   };
+//   isFavorite: boolean;
+//   isPremium: boolean;
+//   rating: number;
+//   previewImage: string;
+// };
+export interface Offer {
   id: string;
   title: string;
   type: string;
   price: number;
-  city: string;
+  city: {
+    name: string;
+    location: {
+      latitude: number;
+      longitude: number;
+      zoom: number;
+    };
+  };
   location: {
     latitude: number;
     longitude: number;
@@ -13,4 +36,4 @@ export type Offer = {
   isPremium: boolean;
   rating: number;
   previewImage: string;
-};
+}
