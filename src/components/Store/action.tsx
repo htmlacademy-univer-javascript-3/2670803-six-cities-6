@@ -1,4 +1,4 @@
-import { Offer } from '../../mocks/types/offer';
+import { Offer } from '../../api/types/offer';
 
 export const SET_CITY = 'SET_CITY' as const;
 export const SET_OFFERS = 'SET_OFFERS' as const;

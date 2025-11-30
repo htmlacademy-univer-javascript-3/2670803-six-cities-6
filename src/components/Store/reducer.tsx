@@ -1,5 +1,4 @@
-import { Offer } from '../../mocks/types/offer';
-import { offers } from '../../mocks/offers';
+import { Offer } from '../../api/types/offer';
 import { SET_CITY, SET_OFFERS } from './action';
 
 interface StateType {
@@ -9,7 +8,7 @@ interface StateType {
 
 export const initialState: StateType = {
   city: 'Paris',
-  offers: offers,
+  offers: [],
 };
 
 type SetCityAction = {
