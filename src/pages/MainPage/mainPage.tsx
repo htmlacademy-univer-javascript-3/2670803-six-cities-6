@@ -8,17 +8,35 @@ import { setCity } from '../../components/Store/action';
 import CitiesList from '../../components/CitiesList/cititesList';
 import SortOptions, { SortType } from '../../components/SortOptions/sortOptions';
 import { fetchOffers } from '../../components/Store/api-actions';
+import Spinner from '../../components/Spinner/Spinner';
+import ErrorMessage from '../../components/ErrorMessage/errorMessage';
 
 const MainPage: FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const selectedCity = useSelector((state: RootState) => state.city);
   const offers = useSelector((state: RootState) => state.offers);
+  const error = useSelector((state: RootState) => state.error);
   const [currentSort, setCurrentSort] = useState<SortType>('Popular');
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(fetchOffers());
+    const loadOffers = async () => {
+      try {
+        await dispatch(fetchOffers());
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadOffers();
   }, [dispatch]);
+
+  if (isLoading) {
+    return (
+      <Spinner />
+    );
+  }
 
   const filteredOffers = offers.filter((offer) => offer.city.name === selectedCity);
   const sortedOffers = [...filteredOffers].sort((a,b) => {
@@ -49,6 +67,7 @@ const MainPage: FC = () => {
 
   return (
     <div className="page page--gray page--main">
+      {error && <ErrorMessage message={error} />}
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
