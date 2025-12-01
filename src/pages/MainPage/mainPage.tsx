@@ -1,21 +1,44 @@
-import { FC, useState } from 'react';
-import { MainPageProps } from '../../components/types';
+import { FC, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import OfferList from '../../components/OfferList/offerList';
 import OfferMap from '../../components/Map/map';
-import { RootState } from '../../components/Store';
+import { RootState, AppDispatch } from '../../components/Store';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCity } from '../../components/Store/action';
 import CitiesList from '../../components/CitiesList/cititesList';
 import SortOptions, { SortType } from '../../components/SortOptions/sortOptions';
+import { fetchOffers } from '../../components/Store/api-actions';
+import Spinner from '../../components/Spinner/Spinner';
+import ErrorMessage from '../../components/ErrorMessage/errorMessage';
 
-const MainPage: FC<MainPageProps> = ({ offers }) => {
-  const dispatch = useDispatch();
+const MainPage: FC = () => {
+  const dispatch: AppDispatch = useDispatch();
   const selectedCity = useSelector((state: RootState) => state.city);
-  const filteredOffers = offers.filter((offer) => offer.city === selectedCity);
+  const offers = useSelector((state: RootState) => state.offers);
+  const error = useSelector((state: RootState) => state.error);
   const [currentSort, setCurrentSort] = useState<SortType>('Popular');
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    const loadOffers = async () => {
+      try {
+        await dispatch(fetchOffers());
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadOffers();
+  }, [dispatch]);
+
+  if (isLoading) {
+    return (
+      <Spinner />
+    );
+  }
+
+  const filteredOffers = offers.filter((offer) => offer.city.name === selectedCity);
   const sortedOffers = [...filteredOffers].sort((a,b) => {
     switch (currentSort) {
       case 'Price: low to high':
@@ -28,7 +51,6 @@ const MainPage: FC<MainPageProps> = ({ offers }) => {
         return 0;
     }
   });
-
   const filteredOfferCount = sortedOffers.length;
 
   const handleCitychange = (city: string) => {
@@ -45,6 +67,7 @@ const MainPage: FC<MainPageProps> = ({ offers }) => {
 
   return (
     <div className="page page--gray page--main">
+      {error && <ErrorMessage message={error} />}
       <header className="header">
         <div className="container">
           <div className="header__wrapper">

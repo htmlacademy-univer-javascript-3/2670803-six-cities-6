@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Offer } from '../../mocks/types/offer';
+import { Offer } from '../../api/types/offer';
 import { MapUpdater } from '../MapUpdater/mapUpdater';
 
 const defaultCustomIcon = leaflet.icon({

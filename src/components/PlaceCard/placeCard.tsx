@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { Offer } from '../../mocks/types/offer';
+import { Offer } from '../../api/types/offer';
 
 type PlaceCardProps = {
   offer: Offer;

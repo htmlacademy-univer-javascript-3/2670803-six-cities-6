@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Offer } from '../../mocks/types/offer';
+import { Offer } from '../../api/types/offer';
 import PlaceCard from '../PlaceCard/placeCard';
 
 type NearPlacesListProps = {
