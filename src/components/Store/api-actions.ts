@@ -8,10 +8,7 @@ import { LoginResponse } from '../../api/types/auth';
 export const fetchOffers = createAsyncThunk<
   void,
   void,
-  {
-    dispatch: AppDispatch;
-    extra: typeof API;
-  }
+  { dispatch: AppDispatch; extra: typeof API }
 >('offers/fetchOffers', async (_, { dispatch, extra: api }) => {
   try {
     const response = await api.get<Offer[]>('/offers');
@@ -21,22 +18,26 @@ export const fetchOffers = createAsyncThunk<
   }
 });
 
+export const checkAuth = createAsyncThunk<
+  void,
+  void,
+  { dispatch: AppDispatch; extra: typeof API }
+>('auth/checkAuth', async (_, { dispatch, extra: api }) => {
+  try {
+    await api.get('/login');
+    dispatch(setAuthorizationStatus('AUTH'));
+  } catch {
+    dispatch(setAuthorizationStatus('NO_AUTH'));
+  }
+});
+
 export const login = createAsyncThunk<
   void,
   { email: string; password: string },
-  {
-    dispatch: AppDispatch;
-    extra: typeof API;
-  }
+  { dispatch: AppDispatch; extra: typeof API }
 >('auth/login', async ({ email, password }, { dispatch, extra: api }) => {
   try {
-    const response = await api.get<LoginResponse>('/login', {
-      params: {
-        email,
-        password
-      }
-    });
-
+    const response = await api.post<LoginResponse>('/login', { email, password });
     const token = response.data.token;
     saveToken(token);
     dispatch(setAuthorizationStatus('AUTH'));

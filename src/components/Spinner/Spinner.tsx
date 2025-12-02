@@ -1,10 +1,14 @@
 import { FC } from 'react';
 import styles from './spinner.module.css';
 
-const Spinner: FC = () => (
+interface SpinnerProps {
+  text?: string;
+}
+
+const Spinner: FC<SpinnerProps> = ({ text = 'Loading...' }) => (
   <div className={styles.spinnerContainer}>
     <div className={styles.spinner}></div>
-    <p className={styles.text}>Loading offers...</p>
+    <p className={styles.text}>{text}</p>
   </div>
 );
 
