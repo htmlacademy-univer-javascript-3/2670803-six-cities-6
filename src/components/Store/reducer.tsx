@@ -1,12 +1,14 @@
 import { Offer } from '../../api/types/offer';
 import { AuthorizationStatus } from '../../api/types/auth';
-import { SET_CITY, SET_OFFERS, SET_ERROR, SET_AUTHORIZATION_STATUS } from './action';
+import { UserData } from '../../api/types/auth';
+import { SET_CITY, SET_OFFERS, SET_ERROR, SET_AUTHORIZATION_STATUS, SET_USER } from './action';
 
 interface StateType {
   city: string;
   offers: Offer[];
   error: string | null;
   authorizationStatus: AuthorizationStatus;
+  user: UserData | null;
 }
 
 export const initialState: StateType = {
@@ -14,6 +16,7 @@ export const initialState: StateType = {
   offers: [],
   error: null,
   authorizationStatus: 'UNKNOWN',
+  user: null,
 };
 
 type SetCityAction = {
@@ -36,7 +39,12 @@ type SetAuthorizationStatusAction = {
   payload: AuthorizationStatus;
 }
 
-export type ActionType = SetCityAction | SetOffersAction | SetErrorAction | SetAuthorizationStatusAction;
+type SetUserAction = {
+  type: typeof SET_USER;
+  payload: UserData | null;
+};
+
+export type ActionType = SetCityAction | SetOffersAction | SetErrorAction | SetAuthorizationStatusAction | SetUserAction;
 
 export const reducer = (state: StateType = initialState, action: ActionType): StateType => {
   switch (action.type) {
@@ -48,6 +56,8 @@ export const reducer = (state: StateType = initialState, action: ActionType): St
       return { ...state, error: action.payload };
     case SET_AUTHORIZATION_STATUS:
       return { ...state, authorizationStatus: action.payload };
+    case SET_USER:
+      return { ...state, user: action.payload };
     default:
       return state;
   }

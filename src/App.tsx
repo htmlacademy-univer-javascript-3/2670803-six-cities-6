@@ -27,7 +27,7 @@ const App: FC = () => {
         <Route path="/" element={<MainPage />} />
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/login" element={authorizationStatus === 'AUTH' ? (<Navigate to="/" replace />) : (<LoginPage />)}/>
-        <Route element={<PrivateRoute isAuthorized={authorizationStatus === 'AUTH'} />}>
+        <Route element={<PrivateRoute />}>
           <Route path="/favorites" element={<FavoritesPage />} />
         </Route>
         <Route path="/offer/:id" element={<OfferPage />} />

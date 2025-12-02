@@ -1,9 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { setOffers, setError, setAuthorizationStatus } from './action';
-import { API, saveToken } from '../../api/Api';
+import { setOffers, setError, setAuthorizationStatus, setUser} from './action';
+import { API, saveToken, dropToken } from '../../api/Api';
 import { AppDispatch } from './index';
+import { UserData, LoginResponse } from '../../api/types/auth';
 import { Offer } from '../../api/types/offer';
-import { LoginResponse } from '../../api/types/auth';
 
 export const fetchOffers = createAsyncThunk<
   void,
@@ -24,10 +24,12 @@ export const checkAuth = createAsyncThunk<
   { dispatch: AppDispatch; extra: typeof API }
 >('auth/checkAuth', async (_, { dispatch, extra: api }) => {
   try {
-    await api.get('/login');
+    const response = await api.get<UserData>('/login');
+    dispatch(setUser(response.data));
     dispatch(setAuthorizationStatus('AUTH'));
   } catch {
     dispatch(setAuthorizationStatus('NO_AUTH'));
+    dispatch(setUser(null));
   }
 });
 
@@ -38,12 +40,31 @@ export const login = createAsyncThunk<
 >('auth/login', async ({ email, password }, { dispatch, extra: api }) => {
   try {
     const response = await api.post<LoginResponse>('/login', { email, password });
-    const token = response.data.token;
+    const { token, ...userData } = response.data;
     saveToken(token);
     dispatch(setAuthorizationStatus('AUTH'));
+    dispatch(setUser(userData));
+    dispatch(setError(null));
   } catch (error) {
     dispatch(setAuthorizationStatus('NO_AUTH'));
+    dispatch(setUser(null));
     dispatch(setError('Login failed.'));
     throw error;
   }
+});
+
+export const logout = createAsyncThunk<
+  void,
+  void,
+  { dispatch: AppDispatch; extra: typeof API }
+>('auth/logout', async (_, { dispatch, extra: api }) => {
+  try {
+    await api.delete('/logout');
+  } catch {
+    dispatch(setError('Please try again later.'));
+  }
+  dropToken();
+  dispatch(setAuthorizationStatus('NO_AUTH'));
+  dispatch(setUser(null));
+  dispatch(setError(null));
 });
