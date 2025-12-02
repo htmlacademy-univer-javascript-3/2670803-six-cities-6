@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import OfferList from '../../components/OfferList/offerList';
 import OfferMap from '../../components/Map/map';
 import { RootState, AppDispatch } from '../../components/Store';
@@ -17,6 +17,7 @@ const MainPage: FC = () => {
   const selectedCity = useSelector((state: RootState) => state.city);
   const offers = useSelector((state: RootState) => state.offers);
   const error = useSelector((state: RootState) => state.error);
+  const navigate = useNavigate();
 
   const [currentSort, setCurrentSort] = useState<SortType>('Popular');
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
@@ -73,7 +74,9 @@ const MainPage: FC = () => {
 
   const handleLogout = (e: React.MouseEvent) => {
     e.preventDefault();
-    dispatch(logout());
+    dispatch(logout()).then(() => {
+      navigate('/login');
+    });
   };
 
   return (
