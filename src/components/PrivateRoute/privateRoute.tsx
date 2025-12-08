@@ -1,11 +1,11 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { FC } from 'react';
+import { useAppSelector } from '../Store';
 
-type PrivateRouteProps = {
-  isAuthorized: boolean;
+const PrivateRoute: FC = () => {
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+
+  return authorizationStatus === 'AUTH' ? (<Outlet />) : (<Navigate to="/login" replace />);
 };
-
-const PrivateRoute: FC<PrivateRouteProps> = ({ isAuthorized }) =>
-  isAuthorized ? <Outlet /> : <Navigate to="/login" replace />;
 
 export default PrivateRoute;

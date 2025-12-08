@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import OfferList from '../../components/OfferList/offerList';
 import OfferMap from '../../components/Map/map';
 import { RootState, AppDispatch } from '../../components/Store';
@@ -7,18 +7,25 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setCity } from '../../components/Store/action';
 import CitiesList from '../../components/CitiesList/cititesList';
 import SortOptions, { SortType } from '../../components/SortOptions/sortOptions';
-import { fetchOffers } from '../../components/Store/api-actions';
+import { fetchOffers, logout } from '../../components/Store/api-actions';
 import Spinner from '../../components/Spinner/Spinner';
 import ErrorMessage from '../../components/ErrorMessage/errorMessage';
+import { useAppSelector } from '../../components/Store';
 
 const MainPage: FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const selectedCity = useSelector((state: RootState) => state.city);
   const offers = useSelector((state: RootState) => state.offers);
   const error = useSelector((state: RootState) => state.error);
+  const navigate = useNavigate();
+
   const [currentSort, setCurrentSort] = useState<SortType>('Popular');
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const user = useSelector((state: RootState) => state.user);
+  const favoriteCount = offers.filter((offer) => offer.isFavorite).length;
 
   useEffect(() => {
     const loadOffers = async () => {
@@ -65,6 +72,13 @@ const MainPage: FC = () => {
     setActiveOfferId(offerId);
   };
 
+  const handleLogout = (e: React.MouseEvent) => {
+    e.preventDefault();
+    dispatch(logout()).then(() => {
+      navigate('/login');
+    });
+  };
+
   return (
     <div className="page page--gray page--main">
       {error && <ErrorMessage message={error} />}
@@ -78,19 +92,41 @@ const MainPage: FC = () => {
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a className="header__nav-link header__nav-link--profile" href="#">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">3</span>
-                  </a>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
+                {authorizationStatus === 'AUTH' ? (
+                  <>
+                    <li className="header__nav-item user">
+                      <Link className="header__nav-link header__nav-link--profile" to="/favorites">
+                        <div className="header__avatar-wrapper user__avatar-wrapper">
+                          {user && (
+                            <img
+                              className="header__avatar user__avatar"
+                              src={user.avatarUrl}
+                              alt={user.name}
+                              width="20"
+                              height="20"
+                            />
+                          )}
+                        </div>
+                        <span className="header__user-name user__name">
+                          {user ? user.email : 'Loading...'}
+                        </span>
+                        <span className="header__favorite-count">{favoriteCount}</span>
+                      </Link>
+                    </li>
+                    <li className="header__nav-item">
+                      <a className="header__nav-link" href="#" onClick={handleLogout}>
+                        <span className="header__signout">Sign out</span>
+                      </a>
+                    </li>
+                  </>
+                ) : (
+                  <li className="header__nav-item user">
+                    <Link className="header__nav-link header__nav-link--profile" to="/login">
+                      <div className="header__avatar-wrapper user__avatar-wrapper"></div>
+                      <span className="header__login">Sign in</span>
+                    </Link>
+                  </li>
+                )}
               </ul>
             </nav>
           </div>
