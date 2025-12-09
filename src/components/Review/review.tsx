@@ -7,6 +7,7 @@ export type ReviewType = {
   rating: number;
   text: string;
   date: string;
+  isPro?: boolean;
 };
 
 const Review: FC<{ review: ReviewType }> = ({ review }) => {
