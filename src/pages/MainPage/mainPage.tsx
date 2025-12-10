@@ -159,6 +159,7 @@ const MainPage: FC = () => {
               <OfferMap
                 offers={sortedOffers}
                 activeOfferId={activeOfferId}
+                mode="default"
               />
             </div>
           </div>

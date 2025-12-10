@@ -201,20 +201,25 @@ const OfferPage: FC = () => {
 
               <section className="offer__reviews reviews">
                 {commentsLoading ? <Spinner text="Loading comments..." /> : <ReviewList reviews={reviews} />}
-                {authorizationStatus === 'AUTH' && <ReviewForm />}
+                {authorizationStatus === 'AUTH' && offerDetails.id && (
+                  <ReviewForm offerId={offerDetails.id} />
+                )}
               </section>
             </div>
           </div>
 
-          <section className="offer__map map">
-            <OfferMap offers={[offerDetails, ...nearbyOffers]} />
+          <section>
+            <OfferMap
+              offers={[offerDetails, ...nearbyOffers]}
+              mode="offer"
+            />
           </section>
         </section>
 
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <NearPlacesList offers={nearbyOffers} />
+            <NearPlacesList offers={nearbyOffers.slice(0, 3)} />
           </section>
         </div>
       </main>
