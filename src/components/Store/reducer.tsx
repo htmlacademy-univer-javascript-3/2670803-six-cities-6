@@ -1,7 +1,8 @@
 import { Offer } from '../../api/types/offer';
 import { AuthorizationStatus } from '../../api/types/auth';
 import { UserData } from '../../api/types/auth';
-import { SET_CITY, SET_OFFERS, SET_ERROR, SET_AUTHORIZATION_STATUS, SET_USER } from './action';
+import { Comment } from '../../api/types/comment';
+import { SET_CITY, SET_OFFERS, SET_ERROR, SET_AUTHORIZATION_STATUS, SET_USER, SET_OFFER_DETAILS, SET_NEARBY_OFFERS, SET_COMMENTS, SET_COMMENTS_LOADING } from './action';
 
 interface StateType {
   city: string;
@@ -9,6 +10,10 @@ interface StateType {
   error: string | null;
   authorizationStatus: AuthorizationStatus;
   user: UserData | null;
+   offerDetails: Offer | null;
+  nearbyOffers: Offer[];
+  comments: Comment[];
+  commentsLoading: boolean;
 }
 
 export const initialState: StateType = {
@@ -17,6 +22,10 @@ export const initialState: StateType = {
   error: null,
   authorizationStatus: 'UNKNOWN',
   user: null,
+  offerDetails: null,
+  nearbyOffers: [],
+  comments: [],
+  commentsLoading: false,
 };
 
 type SetCityAction = {
@@ -44,7 +53,36 @@ type SetUserAction = {
   payload: UserData | null;
 };
 
-export type ActionType = SetCityAction | SetOffersAction | SetErrorAction | SetAuthorizationStatusAction | SetUserAction;
+type SetOfferDetailsAction = {
+  type: typeof SET_OFFER_DETAILS;
+  payload: Offer | null;
+};
+
+type SetNearbyOffersAction = {
+  type: typeof SET_NEARBY_OFFERS;
+  payload: Offer[];
+};
+
+type SetCommentsAction = {
+  type: typeof SET_COMMENTS;
+  payload: Comment[];
+};
+
+type SetCommentsLoadingAction = {
+  type: typeof SET_COMMENTS_LOADING;
+  payload: boolean;
+};
+
+export type ActionType =
+  | SetCityAction
+  | SetOffersAction
+  | SetErrorAction
+  | SetAuthorizationStatusAction
+  | SetUserAction
+  | SetOfferDetailsAction
+  | SetNearbyOffersAction
+  | SetCommentsAction
+  | SetCommentsLoadingAction;
 
 export const reducer = (state: StateType = initialState, action: ActionType): StateType => {
   switch (action.type) {
@@ -58,6 +96,14 @@ export const reducer = (state: StateType = initialState, action: ActionType): St
       return { ...state, authorizationStatus: action.payload };
     case SET_USER:
       return { ...state, user: action.payload };
+    case SET_OFFER_DETAILS:
+      return { ...state, offerDetails: action.payload };
+    case SET_NEARBY_OFFERS:
+      return { ...state, nearbyOffers: action.payload };
+    case SET_COMMENTS:
+      return { ...state, comments: action.payload };
+    case SET_COMMENTS_LOADING:
+      return { ...state, commentsLoading: action.payload };
     default:
       return state;
   }

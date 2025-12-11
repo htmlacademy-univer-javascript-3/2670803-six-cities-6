@@ -42,6 +42,12 @@ const LoginPage: FC = () => {
       setFormError('Password shouldn`t contain spaces');
       return false;
     }
+
+    const isValidPassword = /^(?=.*[A-Za-z])(?=.*\d).+$/;
+    if (!isValidPassword.test(password)) {
+      setFormError('Password must contain at least one letter and one number');
+      return false;
+    }
     return true;
   };
 
