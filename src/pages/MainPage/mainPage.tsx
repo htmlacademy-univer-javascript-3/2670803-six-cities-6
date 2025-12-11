@@ -11,6 +11,7 @@ import { fetchOffers, logout } from '../../components/Store/api-actions';
 import Spinner from '../../components/Spinner/Spinner';
 import ErrorMessage from '../../components/ErrorMessage/errorMessage';
 import { useAppSelector } from '../../components/Store';
+import MainEmpty from '../../components/MainEmpty/mainEmpty';
 
 const MainPage: FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -141,29 +142,33 @@ const MainPage: FC = () => {
             onCityChange={handleCitychange}
           />
         </div>
-        <div className="cities">
-          <div className="cities__places-container container">
-            <section className="cities__places places">
-              <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{filteredOfferCount} places to stay in {selectedCity}</b>
-              <SortOptions
-                currentSort={currentSort}
-                onSortChange={handleSortChange}
-              />
-              <OfferList
-                offers={sortedOffers}
-                onOfferHover={handleOfferHover}
-              />
-            </section>
-            <div className="cities__right-section">
-              <OfferMap
-                offers={sortedOffers}
-                activeOfferId={activeOfferId}
-                mode="default"
-              />
+        {filteredOfferCount === 0 ? (
+          <MainEmpty city={selectedCity} />
+        ) : (
+          <div className="cities">
+            <div className="cities__places-container container">
+              <section className="cities__places places">
+                <h2 className="visually-hidden">Places</h2>
+                <b className="places__found">{filteredOfferCount} places to stay in {selectedCity}</b>
+                <SortOptions
+                  currentSort={currentSort}
+                  onSortChange={handleSortChange}
+                />
+                <OfferList
+                  offers={sortedOffers}
+                  onOfferHover={handleOfferHover}
+                />
+              </section>
+              <div className="cities__right-section">
+                <OfferMap
+                  offers={sortedOffers}
+                  activeOfferId={activeOfferId}
+                  mode="default"
+                />
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </main>
     </div>
   );
