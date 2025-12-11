@@ -1,20 +1,19 @@
 import { FC, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../components/Store';
 import ReviewForm from '../../components/SentForm/sentForm';
 import ReviewList from '../../components/ReviewList/reviewList';
 import OfferMap from '../../components/Map/map';
 import NearPlacesList from '../../components/NearPlacesList/nearPlacesList';
 import Spinner from '../../components/Spinner/Spinner';
-import { AppDispatch, useAppSelector } from '../../components/Store';
-import { fetchOfferData, logout } from '../../components/Store/api-actions';
+import { fetchOfferData, logout, toggleFavoriteOffer } from '../../components/Store/api-actions';
 
 const OfferPage: FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { offerDetails, nearbyOffers, comments, commentsLoading, authorizationStatus, user } = useAppSelector((state) => state);
+  const { offerDetails, nearbyOffers, comments, commentsLoading, authorizationStatus, user, favoriteOffers } = useAppSelector((state) => state);
 
   useEffect(() => {
     if (!id) {
@@ -37,6 +36,16 @@ const OfferPage: FC = () => {
     navigate('/404');
     return null;
   }
+
+  const isFavorite = favoriteOffers.some((offer) => offer.id === offerDetails.id);
+
+  const handleFavoriteClick = () => {
+    if (authorizationStatus !== 'AUTH') {
+      navigate('/login');
+      return;
+    }
+    dispatch(toggleFavoriteOffer({ offerId: offerDetails.id, isFavorite }));
+  };
 
   const {
     title,
@@ -89,6 +98,7 @@ const OfferPage: FC = () => {
                           {user.avatarUrl && <img className="user__avatar" src={user.avatarUrl} alt="Avatar" />}
                         </div>
                         <span className="header__user-name user__name">{user.email}</span>
+                        <span className="header__favorite-count">{favoriteOffers.length}</span>
                       </Link>
                     </li>
                     <li className="header__nav-item">
@@ -138,8 +148,9 @@ const OfferPage: FC = () => {
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{title}</h1>
                 <button
-                  className={`offer__bookmark-button button ${offerDetails.isFavorite ? 'offer__bookmark-button--active' : ''}`}
+                  className={`offer__bookmark-button button ${isFavorite ? 'offer__bookmark-button--active' : ''}`}
                   type="button"
+                  onClick={handleFavoriteClick}
                 >
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>

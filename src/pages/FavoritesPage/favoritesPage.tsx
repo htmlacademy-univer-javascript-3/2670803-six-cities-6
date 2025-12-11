@@ -1,25 +1,40 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import OfferList from '../../components/OfferList/offerList';
-import { RootState, useAppDispatch } from '../../components/Store';
-import { useSelector } from 'react-redux';
-import { logout } from '../../components/Store/api-actions';
+import { useAppSelector, useAppDispatch } from '../../components/Store';
+import { fetchFavoriteOffers, logout } from '../../components/Store/api-actions';
+import Spinner from '../../components/Spinner/Spinner';
+import ErrorMessage from '../../components/ErrorMessage/errorMessage';
+import FavoritesEmpty from '../../components/FavoriteEmpty/favoriteEmpty';
 
 const FavoritesPage: FC = () => {
-  const offers = useSelector((state: RootState) => state.offers);
-  const user = useSelector((state: RootState) => state.user);
-  const favoriteOffers = offers.filter((offer) => offer.isFavorite);
-
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const favoriteOffers = useAppSelector((state) => state.favoriteOffers);
+  const user = useAppSelector((state) => state.user);
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const error = useAppSelector((state) => state.error);
+  const isLoading = useAppSelector((state) => state.isFavoriteLoading);
+
+  useEffect(() => {
+    if (authorizationStatus === 'AUTH') {
+      dispatch(fetchFavoriteOffers());
+    }
+  }, [dispatch, authorizationStatus]);
 
   const handleLogout = async () => {
     await dispatch(logout());
     navigate('/login');
   };
 
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <div className="page">
+      {error && <ErrorMessage message={error} />}
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
@@ -35,13 +50,7 @@ const FavoritesPage: FC = () => {
                   <Link className="header__nav-link header__nav-link--profile" to="/favorites">
                     <div className="header__avatar-wrapper user__avatar-wrapper">
                       {user?.avatarUrl && (
-                        <img
-                          className="user__avatar"
-                          src={user.avatarUrl}
-                          alt={user.name}
-                          width="20"
-                          height="20"
-                        />
+                        <img className="user__avatar" src={user.avatarUrl} alt={user.name} width="20" height="20" />
                       )}
                     </div>
                     <span className="header__user-name user__name">{user?.email}</span>
@@ -50,7 +59,7 @@ const FavoritesPage: FC = () => {
                 </li>
 
                 <li className="header__nav-item">
-                  <span className="header__nav-link" onClick={() =>{
+                  <span className="header__nav-link" onClick={() => {
                     void handleLogout();
                   }}
                   >
@@ -63,16 +72,22 @@ const FavoritesPage: FC = () => {
           </div>
         </div>
       </header>
+
       <main className="page__main page__main--favorites">
         <div className="page__favorites-container container">
           <section className="favorites">
             <h1 className="favorites__title">Saved listing</h1>
-            <OfferList offers={favoriteOffers} />
+            {favoriteOffers.length > 0 ? (
+              <OfferList offers={favoriteOffers} />
+            ) : (
+              <FavoritesEmpty />
+            )}
           </section>
         </div>
       </main>
+
       <footer className="footer container">
-        <Link className='footer__logo-link' to="/">
+        <Link className="footer__logo-link" to="/">
           <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width="64" height="33" />
         </Link>
       </footer>

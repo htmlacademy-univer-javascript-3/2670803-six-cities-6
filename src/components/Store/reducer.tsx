@@ -2,12 +2,14 @@ import { Offer } from '../../api/types/offer';
 import { AuthorizationStatus } from '../../api/types/auth';
 import { UserData } from '../../api/types/auth';
 import { Comment } from '../../api/types/comment';
-import { SET_CITY, SET_OFFERS, SET_ERROR, SET_AUTHORIZATION_STATUS, SET_USER, SET_OFFER_DETAILS, SET_NEARBY_OFFERS, SET_COMMENTS, SET_COMMENTS_LOADING } from './action';
+import { SET_CITY, SET_OFFERS, SET_ERROR, SET_AUTHORIZATION_STATUS, SET_USER, SET_OFFER_DETAILS, SET_NEARBY_OFFERS, SET_COMMENTS, SET_COMMENTS_LOADING, SET_FAVORITE_OFFERS } from './action';
 
 interface StateType {
   city: string;
   offers: Offer[];
   error: string | null;
+  favoriteOffers: Offer[];
+  isFavoriteLoading: boolean;
   authorizationStatus: AuthorizationStatus;
   user: UserData | null;
    offerDetails: Offer | null;
@@ -20,6 +22,8 @@ export const initialState: StateType = {
   city: 'Paris',
   offers: [],
   error: null,
+  favoriteOffers: [],
+  isFavoriteLoading: false,
   authorizationStatus: 'UNKNOWN',
   user: null,
   offerDetails: null,
@@ -73,6 +77,11 @@ type SetCommentsLoadingAction = {
   payload: boolean;
 };
 
+type SetFavoriteOffersAction = {
+  type: typeof SET_FAVORITE_OFFERS;
+  payload: Offer[];
+};
+
 export type ActionType =
   | SetCityAction
   | SetOffersAction
@@ -82,7 +91,8 @@ export type ActionType =
   | SetOfferDetailsAction
   | SetNearbyOffersAction
   | SetCommentsAction
-  | SetCommentsLoadingAction;
+  | SetCommentsLoadingAction
+  | SetFavoriteOffersAction;
 
 export const reducer = (state: StateType = initialState, action: ActionType): StateType => {
   switch (action.type) {
@@ -104,6 +114,8 @@ export const reducer = (state: StateType = initialState, action: ActionType): St
       return { ...state, comments: action.payload };
     case SET_COMMENTS_LOADING:
       return { ...state, commentsLoading: action.payload };
+    case SET_FAVORITE_OFFERS:
+      return { ...state, favoriteOffers: action.payload, isFavoriteLoading: false, error: null };
     default:
       return state;
   }
