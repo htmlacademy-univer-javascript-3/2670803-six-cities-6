@@ -74,3 +74,14 @@ export const sendComment = async (offerId: string, commentData: CommentData): Pr
   const response = await API.post<Comment>(`/comments/${offerId}`, commentData);
   return response.data;
 };
+
+export const getFavoriteOffers = async (): Promise<Offer[]> => {
+  const response = await API.get<Offer[]>('/favourites');
+  return response.data;
+};
+
+export const toggleFavorite = async (offerId: string, isFavorite: boolean): Promise<Offer> => {
+  const status = isFavorite ? 0 : 1;
+  const response = await API.post<Offer>(`/favorite/${offerId}/${status}`);
+  return response.data;
+};

@@ -12,6 +12,7 @@ export const SET_OFFER_DETAILS = 'SET_OFFER_DETAILS' as const;
 export const SET_NEARBY_OFFERS = 'SET_NEARBY_OFFERS' as const;
 export const SET_COMMENTS = 'SET_COMMENTS' as const;
 export const SET_COMMENTS_LOADING = 'SET_COMMENTS_LOADING' as const;
+export const SET_FAVORITE_OFFERS = 'SET_FAVORITE_OFFERS';
 
 export const setCity = (city: string) => ({
   type: SET_CITY,
@@ -56,4 +57,9 @@ export const setComments = (comments: Comment[]) => ({
 export const setCommentsLoading = (isLoading: boolean) => ({
   type: SET_COMMENTS_LOADING,
   payload: isLoading,
+});
+
+export const setFavoriteOffers = (offers: Offer[]) => ({
+  type: SET_FAVORITE_OFFERS,
+  payload: offers,
 });

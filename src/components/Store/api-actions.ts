@@ -1,11 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { setOffers, setError, setAuthorizationStatus, setUser, setOfferDetails, setNearbyOffers, setComments, setCommentsLoading } from './action';
+import { setOffers, setError, setAuthorizationStatus, setUser, setOfferDetails, setNearbyOffers, setComments, setCommentsLoading, setFavoriteOffers } from './action';
 import { API, saveToken, dropToken } from '../../api/Api';
-import { AppDispatch } from './index';
+import { AppDispatch, RootState } from './index';
 import { UserData, LoginResponse } from '../../api/types/auth';
 import { Offer } from '../../api/types/offer';
 import { Comment, CommentData } from '../../api/types/comment';
 import { AxiosError } from 'axios';
+import { toggleFavorite } from '../../api/Api';
 
 export const fetchOffers = createAsyncThunk<
   void,
@@ -123,3 +124,49 @@ export const postComment = createAsyncThunk<
     throw error;
   }
 });
+
+export const toggleFavoriteOffer = createAsyncThunk<
+  void,
+  { offerId: string; isFavorite: boolean },
+  { dispatch: AppDispatch; state: RootState; extra: typeof API }
+>(
+  'offer/toggleFavorite',
+  async ({ offerId, isFavorite }, { dispatch, getState }) => {
+    try {
+      const updatedOffer = await toggleFavorite(offerId, isFavorite);
+
+      const { offers, offerDetails } = getState();
+      const newOffers = offers.map((o) => o.id === updatedOffer.id ? updatedOffer : o);
+      dispatch(setOffers(newOffers));
+
+      if (offerDetails?.id === updatedOffer.id) {
+        dispatch(setOfferDetails(updatedOffer));
+      }
+
+      const favoriteOffers = updatedOffer.isFavorite
+        ? [...getState().favoriteOffers, updatedOffer]
+        : getState().favoriteOffers.filter((o) => o.id !== updatedOffer.id);
+
+      dispatch(setFavoriteOffers(favoriteOffers));
+
+    } catch {
+      dispatch(setError('Failed to update favorite. Please try again.'));
+    }
+  }
+);
+
+export const fetchFavoriteOffers = createAsyncThunk<
+  void,
+  void,
+  { dispatch: AppDispatch; extra: typeof API }
+>(
+  'offers/fetchFavoriteOffers',
+  async (_, { dispatch, extra: api }) => {
+    try {
+      const response = await api.get<Offer[]>('/favorite');
+      dispatch(setFavoriteOffers(response.data));
+    } catch {
+      dispatch(setError('Failed to load favorite offers. Please try again.'));
+    }
+  }
+);

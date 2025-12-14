@@ -1,20 +1,19 @@
 import { FC, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../components/Store';
 import ReviewForm from '../../components/SentForm/sentForm';
 import ReviewList from '../../components/ReviewList/reviewList';
 import OfferMap from '../../components/Map/map';
 import NearPlacesList from '../../components/NearPlacesList/nearPlacesList';
 import Spinner from '../../components/Spinner/Spinner';
-import { AppDispatch, useAppSelector } from '../../components/Store';
-import { fetchOfferData, logout } from '../../components/Store/api-actions';
+import { fetchOfferData, logout, toggleFavoriteOffer } from '../../components/Store/api-actions';
 
 const OfferPage: FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { offerDetails, nearbyOffers, comments, commentsLoading, authorizationStatus, user } = useAppSelector((state) => state);
+  const { offerDetails, nearbyOffers, comments, commentsLoading, authorizationStatus, user, favoriteOffers } = useAppSelector((state) => state);
 
   useEffect(() => {
     if (!id) {
@@ -37,6 +36,16 @@ const OfferPage: FC = () => {
     navigate('/404');
     return null;
   }
+
+  const isFavorite = favoriteOffers.some((offer) => offer.id === offerDetails.id);
+
+  const handleFavoriteClick = () => {
+    if (authorizationStatus !== 'AUTH') {
+      navigate('/login');
+      return;
+    }
+    dispatch(toggleFavoriteOffer({ offerId: offerDetails.id, isFavorite }));
+  };
 
   const {
     title,
@@ -63,10 +72,14 @@ const OfferPage: FC = () => {
     isPro: comment.user.isPro,
   }));
 
-  const handleSignOut = async () => {
-    await dispatch(logout());
-    navigate('/login');
+  const handleLogout = (e: React.MouseEvent) => {
+    e.preventDefault();
+    dispatch(logout()).then(() => {
+      navigate('/login');
+    });
   };
+
+  const favoriteCount = favoriteOffers.length;
 
   return (
     <div className="page">
@@ -81,32 +94,38 @@ const OfferPage: FC = () => {
 
             <nav className="header__nav">
               <ul className="header__nav-list">
-                {authorizationStatus === 'AUTH' && user ? (
+                {authorizationStatus === 'AUTH' ? (
                   <>
                     <li className="header__nav-item user">
                       <Link className="header__nav-link header__nav-link--profile" to="/favorites">
                         <div className="header__avatar-wrapper user__avatar-wrapper">
-                          {user.avatarUrl && <img className="user__avatar" src={user.avatarUrl} alt="Avatar" />}
+                          {user && (
+                            <img
+                              className="header__avatar user__avatar"
+                              src={user.avatarUrl}
+                              alt={user.name}
+                              width="20"
+                              height="20"
+                            />
+                          )}
                         </div>
-                        <span className="header__user-name user__name">{user.email}</span>
+                        <span className="header__user-name user__name">
+                          {user ? user.email : 'Loading...'}
+                        </span>
+                        <span className="header__favorite-count">{favoriteCount}</span>
                       </Link>
                     </li>
                     <li className="header__nav-item">
-                      <span
-                        className="header__nav-link"
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => {
-                          handleSignOut();
-                        }}
-                      >
+                      <a className="header__nav-link" href="#" onClick={handleLogout}>
                         <span className="header__signout">Sign out</span>
-                      </span>
+                      </a>
                     </li>
                   </>
                 ) : (
-                  <li className="header__nav-item">
-                    <Link className="header__nav-link" to="/login">
-                      <span className="header__signout">Login</span>
+                  <li className="header__nav-item user">
+                    <Link className="header__nav-link header__nav-link--profile" to="/login">
+                      <div className="header__avatar-wrapper user__avatar-wrapper"></div>
+                      <span className="header__login">Sign in</span>
                     </Link>
                   </li>
                 )}
@@ -138,8 +157,9 @@ const OfferPage: FC = () => {
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{title}</h1>
                 <button
-                  className={`offer__bookmark-button button ${offerDetails.isFavorite ? 'offer__bookmark-button--active' : ''}`}
+                  className={`offer__bookmark-button button ${isFavorite ? 'offer__bookmark-button--active' : ''}`}
                   type="button"
+                  onClick={handleFavoriteClick}
                 >
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
