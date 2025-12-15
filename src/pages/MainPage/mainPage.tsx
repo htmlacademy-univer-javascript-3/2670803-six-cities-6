@@ -1,17 +1,17 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import OfferList from '../../components/OfferList/offerList';
-import OfferMap from '../../components/Map/map';
 import { RootState, AppDispatch } from '../../components/Store';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCity } from '../../components/Store/action';
-import CitiesList from '../../components/CitiesList/cititesList';
+import MemoizedCitiesList from '../../hocs/memoized-cties-list/memoized-cities-list';
 import SortOptions, { SortType } from '../../components/SortOptions/sortOptions';
 import { fetchOffers, logout } from '../../components/Store/api-actions';
 import Spinner from '../../components/Spinner/Spinner';
-import ErrorMessage from '../../components/ErrorMessage/errorMessage';
+import ErrorMessage from '../../components/error-message/error-message';
 import { useAppSelector } from '../../components/Store';
-import MainEmpty from '../../components/MainEmpty/mainEmpty';
+import MemoizedMainEmpty from '../../hocs/memoized-main-empty/memoized-main-empty';
+import MemoizedOfferMap from '../../hocs/memoized-map/memoized-map';
 
 const MainPage: FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -27,6 +27,25 @@ const MainPage: FC = () => {
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const user = useSelector((state: RootState) => state.user);
   const favoriteCount = offers.filter((offer) => offer.isFavorite).length;
+
+  const filteredOffers = useMemo(
+    () => offers.filter((offer) => offer.city.name === selectedCity),
+    [offers, selectedCity]
+  );
+
+  const memoizedSortedOffers = useMemo(
+    () => [...filteredOffers].sort((a, b) => {
+      switch (currentSort) {
+        case 'Price: low to high': return a.price - b.price;
+        case 'Price: high to low': return b.price - a.price;
+        case 'Top rated first': return b.rating - a.rating;
+        default: return 0;
+      }
+    }),
+    [filteredOffers, currentSort]
+  );
+
+  const filteredOfferCount = memoizedSortedOffers.length;
 
   useEffect(() => {
     const loadOffers = async () => {
@@ -45,21 +64,6 @@ const MainPage: FC = () => {
       <Spinner />
     );
   }
-
-  const filteredOffers = offers.filter((offer) => offer.city.name === selectedCity);
-  const sortedOffers = [...filteredOffers].sort((a,b) => {
-    switch (currentSort) {
-      case 'Price: low to high':
-        return a.price - b.price;
-      case 'Price: high to low':
-        return b.price - a.price;
-      case 'Top rated first':
-        return b.rating - a.rating;
-      default:
-        return 0;
-    }
-  });
-  const filteredOfferCount = sortedOffers.length;
 
   const handleCitychange = (city: string) => {
     dispatch(setCity(city));
@@ -137,13 +141,13 @@ const MainPage: FC = () => {
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
-          <CitiesList
+          <MemoizedCitiesList
             currentCity={selectedCity}
             onCityChange={handleCitychange}
           />
         </div>
         {filteredOfferCount === 0 ? (
-          <MainEmpty city={selectedCity} />
+          <MemoizedMainEmpty city={selectedCity} />
         ) : (
           <div className="cities">
             <div className="cities__places-container container">
@@ -155,13 +159,13 @@ const MainPage: FC = () => {
                   onSortChange={handleSortChange}
                 />
                 <OfferList
-                  offers={sortedOffers}
+                  offers={memoizedSortedOffers}
                   onOfferHover={handleOfferHover}
                 />
               </section>
               <div className="cities__right-section">
-                <OfferMap
-                  offers={sortedOffers}
+                <MemoizedOfferMap
+                  offers={memoizedSortedOffers}
                   activeOfferId={activeOfferId}
                   mode="default"
                 />

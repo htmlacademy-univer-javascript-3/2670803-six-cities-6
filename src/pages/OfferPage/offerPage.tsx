@@ -3,10 +3,10 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../components/Store';
 import ReviewForm from '../../components/SentForm/sentForm';
 import ReviewList from '../../components/ReviewList/reviewList';
-import OfferMap from '../../components/Map/map';
-import NearPlacesList from '../../components/NearPlacesList/nearPlacesList';
 import Spinner from '../../components/Spinner/Spinner';
 import { fetchOfferData, logout, toggleFavoriteOffer } from '../../components/Store/api-actions';
+import MemoizedOfferMap from '../../hocs/memoized-map/memoized-map';
+import { MemoizedNearPlacesList } from '../../hocs/memoized-near-places-list/memoized-near-place-list';
 
 const OfferPage: FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -229,7 +229,7 @@ const OfferPage: FC = () => {
           </div>
 
           <section>
-            <OfferMap
+            <MemoizedOfferMap
               offers={[offerDetails, ...nearbyOffers]}
               mode="offer"
             />
@@ -239,7 +239,7 @@ const OfferPage: FC = () => {
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <NearPlacesList offers={nearbyOffers.slice(0, 3)} />
+            <MemoizedNearPlacesList offers={nearbyOffers.slice(0, 3)} />
           </section>
         </div>
       </main>

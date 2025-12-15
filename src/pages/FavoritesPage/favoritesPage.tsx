@@ -4,8 +4,8 @@ import OfferList from '../../components/OfferList/offerList';
 import { useAppSelector, useAppDispatch } from '../../components/Store';
 import { fetchFavoriteOffers, logout } from '../../components/Store/api-actions';
 import Spinner from '../../components/Spinner/Spinner';
-import ErrorMessage from '../../components/ErrorMessage/errorMessage';
-import FavoritesEmpty from '../../components/FavoriteEmpty/favoriteEmpty';
+import ErrorMessage from '../../components/error-message/error-message';
+import MemoizedFavoritesEmpty from '../../hocs/memoized-favorite-empty/memoized-favorite-empty';
 
 const FavoritesPage: FC = () => {
   const dispatch = useAppDispatch();
@@ -80,7 +80,7 @@ const FavoritesPage: FC = () => {
             {favoriteOffers.length > 0 ? (
               <OfferList offers={favoriteOffers} />
             ) : (
-              <FavoritesEmpty />
+              <MemoizedFavoritesEmpty />
             )}
           </section>
         </div>
