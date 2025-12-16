@@ -8,11 +8,6 @@ type NearPlacesListProps = {
 }
 
 const NearPlacesList: FC<NearPlacesListProps> = ({ offers, onOfferHover }) => {
-  const handleMouseEnter = useCallback(
-    (id: string) => () => onOfferHover?.(id),
-    [onOfferHover]
-  );
-
   const handleMouseLeave = useCallback(
     () => onOfferHover?.(null),
     [onOfferHover]
@@ -24,7 +19,7 @@ const NearPlacesList: FC<NearPlacesListProps> = ({ offers, onOfferHover }) => {
         <MemoizedPlaceCard
           key={offer.id}
           offer={offer}
-          onMouseEnter={handleMouseEnter(offer.id)}
+          onMouseEnter={() => onOfferHover?.(offer.id)}
           onMouseLeave={handleMouseLeave}
         />
       ))}

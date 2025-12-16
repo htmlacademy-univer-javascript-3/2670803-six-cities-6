@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 import { useAppDispatch } from '../Store';
 import { setError } from '../Store/offers/offer-slice';
 import styles from './error-message.module.css';
@@ -10,15 +10,23 @@ interface ErrorMessageProps {
 const ErrorMessage: FC<ErrorMessageProps> = ({ message }) => {
   const dispatch = useAppDispatch();
 
-  const handleClose = useCallback(() => {
+  const handleClose = () => {
     dispatch(setError(null));
-  }, [dispatch]);
+  };
 
   return (
     <div className={styles.errorMessage}>
       <div className={styles.errorMessageContent}>
-        <p>{message}</p>
-        <button className={styles.errorMessageClose} onClick={handleClose}>Close</button>
+        <span className={styles.errorIcon}>⚠️</span>
+        <p className={styles.errorText}>{message}</p>
+        <button
+          className={styles.errorMessageClose}
+          type="button"
+          aria-label="Close error message"
+          onClick={handleClose}
+        >
+          ✕
+        </button>
       </div>
     </div>
   );

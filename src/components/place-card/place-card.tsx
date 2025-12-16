@@ -19,7 +19,7 @@ const PlaceCard: FC<PlaceCardProps> = ({ offer, onMouseEnter, onMouseLeave, isAc
   const authorizationStatus = useAppSelector((state) => state.user.authorizationStatus);
 
   const handleFavoriteClick = useCallback(() => {
-    if (authorizationStatus === AuthorizationStatus.Auth) {
+    if (authorizationStatus !== AuthorizationStatus.Auth) {
       navigate('/login');
       return;
     }
@@ -58,6 +58,7 @@ const PlaceCard: FC<PlaceCardProps> = ({ offer, onMouseEnter, onMouseLeave, isAc
             className={`place-card__bookmark-button button ${offer.isFavorite ? 'place-card__bookmark-button--active' : ''}`}
             type="button"
             onClick={handleFavoriteClick}
+            aria-pressed={offer.isFavorite}
           >
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>

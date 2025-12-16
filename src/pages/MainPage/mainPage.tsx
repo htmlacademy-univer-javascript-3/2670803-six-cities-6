@@ -4,11 +4,9 @@ import { useAppSelector, useAppDispatch } from '../../components/Store';
 import ErrorMessage from '../../components/error-message/error-message';
 import {
   MemoizedCitiesList,
-  MemoizedMainEmpty,
   MemoizedOfferMap,
   MemoizedOfferList,
   MemoizedSortOptions,
-  MemoizedSpinner,
 } from '../../hocs/memoized-component/memoized-component';
 import { SortType } from '../../components/types';
 import { setCity } from '../../components/Store/offers/offer-slice';
@@ -17,6 +15,8 @@ import { logout } from '../../components/Store/user/user-thunks';
 import { AuthorizationStatus } from '../../api/types/auth';
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../components/Store';
+import Spinner from '../../components/spinner/spinner';
+import MainEmpty from '../../components/main-empty/main-empty';
 
 const selectMainPageData = createSelector(
   (state: RootState) => state.offer,
@@ -91,7 +91,7 @@ const MainPage: FC = () => {
   }, [dispatch, navigate]);
 
   if (isLoading) {
-    return <MemoizedSpinner text="Loading offers..." />;
+    return <Spinner text="Loading offers..." />;
   }
 
   return (
@@ -157,7 +157,7 @@ const MainPage: FC = () => {
           />
         </div>
         {filteredOfferCount === 0 ? (
-          <MemoizedMainEmpty city={selectedCity} />
+          <MainEmpty city={selectedCity} />
         ) : (
           <div className="cities">
             <div className="cities__places-container container">

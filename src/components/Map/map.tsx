@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Offer } from '../../api/types/offer';
-import { MemoizedMapUpdater } from '../../hocs/memoized-component/memoized-component';
+import { MapUpdater } from '../map-updater/map-updater';
 
 const DEFAULT_CUSTOM_ICON = leaflet.icon({
   iconUrl: '/img/pin.svg',
@@ -66,7 +66,7 @@ const OfferMap: FC<MapProps> = ({ offers, activeOfferId, mode = 'default' }) => 
       className='cities__map map'
       style={{ height: '400px', width: '100%' }}
     >
-      <MemoizedMapUpdater offers={preparedOffers} />
+      <MapUpdater offers={preparedOffers} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

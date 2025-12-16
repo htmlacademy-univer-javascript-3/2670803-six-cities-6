@@ -2,11 +2,12 @@ import { FC, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../components/Store';
 import Spinner from '../../components/spinner/spinner';
-import { MemoizedErrorMessage, MemoizedFavoritesEmpty } from '../../hocs/memoized-component/memoized-component';
 import { MemoizedOfferList } from '../../hocs/memoized-component/memoized-component';
 import { logout } from '../../components/Store/user/user-thunks';
 import { fetchFavoriteOffers } from '../../components/Store/favorites/favorites-thunks';
 import { AuthorizationStatus } from '../../api/types/auth';
+import FavoritesEmpty from '../../components/favorite-empty/favorite-empty';
+import ErrorMessage from '../../components/error-message/error-message';
 
 const FavoritesPage: FC = () => {
   const dispatch = useAppDispatch();
@@ -33,7 +34,7 @@ const FavoritesPage: FC = () => {
 
   return (
     <div className="page">
-      {error && <MemoizedErrorMessage message={error} />}
+      {error && <ErrorMessage message={error} />}
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
@@ -79,7 +80,7 @@ const FavoritesPage: FC = () => {
             {favoriteOffers.length > 0 ? (
               <MemoizedOfferList offers={favoriteOffers} />
             ) : (
-              <MemoizedFavoritesEmpty />
+              <FavoritesEmpty />
             )}
           </section>
         </div>

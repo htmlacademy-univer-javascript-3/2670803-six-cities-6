@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { useMap } from 'react-leaflet';
 import { Offer } from '../../api/types/offer';
 
@@ -11,12 +11,13 @@ const DEFAULT_ZOOM = 13;
 export const MapUpdater: FC<MapUpdaterProps> = ({ offers }) => {
   const map = useMap();
 
+  const city = useMemo(() => offers[0]?.location, [offers]);
+
   useEffect(() => {
-    if (offers.length > 0) {
-      const city = offers[0].location;
+    if (city) {
       map.setView([city.latitude, city.longitude], DEFAULT_ZOOM);
     }
-  }, [map, offers]);
+  }, [map, city]);
 
   return null;
 };

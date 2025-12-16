@@ -1,33 +1,65 @@
-.error-message {
+.errorMessage {
   position: fixed;
   top: 20px;
   right: 20px;
-  background: #700303;
-  color: white;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  max-width: 300px;
+
+  max-width: 320px;
+  padding: 16px 18px;
+
+  background: linear-gradient(135deg, #8b0000, #b22222);
+  color: #ffffff;
+
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+
+  animation: slideIn 0.3s ease-out;
 }
 
-.error-message__content {
+@keyframes slideIn {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.errorMessageContent {
   display: flex;
   align-items: flex-start;
   gap: 12px;
 }
 
-.error-message__close {
-  background: none;
-  border: none;
-  color: white;
+.errorIcon {
   font-size: 20px;
-  cursor: pointer;
-  padding: 0;
   line-height: 1;
 }
 
-.error-message p {
-  margin: 0;
+.errorText {
   flex: 1;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.errorMessageClose {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.7;
+}
+
+.errorMessageClose:hover {
+  opacity: 1;
+}
+
+.errorMessageClose:focus {
+  outline: none;
 }
