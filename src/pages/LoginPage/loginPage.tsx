@@ -1,22 +1,31 @@
-import { FC, useState, FormEvent, useEffect } from 'react';
+import { FC, useState, FormEvent, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../components/Store';
-import { login } from '../../components/Store/api-actions';
-import Spinner from '../../components/Spinner/Spinner';
+import Spinner from '../../components/spinner/spinner';
+import { login } from '../../components/Store/user/user-thunks';
+import { AuthorizationStatus } from '../../api/types/auth';
+import { createSelector } from '@reduxjs/toolkit';
+import { RootState } from '../../components/Store';
+
+const selectLoginData = createSelector(
+  (state: RootState) => state.user.authorizationStatus,
+  (state: RootState) => state.offer.error,
+  (authorizationStatus, error) => ({ authorizationStatus, error })
+);
 
 const LoginPage: FC = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const { authorizationStatus, error } = useAppSelector(selectLoginData);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string>('');
 
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const error = useAppSelector((state) => state.error);
-
   useEffect(() => {
-    if (authorizationStatus === 'AUTH') {
+    if (authorizationStatus === AuthorizationStatus.Auth) {
       navigate('/');
     }
   }, [authorizationStatus, navigate]);
@@ -27,33 +36,25 @@ const LoginPage: FC = () => {
     }
   }, [error]);
 
-  const validateForm = (): boolean => {
-    setFormError('');
+  const validateForm = useCallback((): boolean => {
+    let errorMsg = '';
 
     if (!email.trim()) {
-      setFormError('Please enter email');
-      return false;
-    }
-    if (!password.trim()) {
-      setFormError('Please enter password');
-      return false;
-    }
-    if (password.includes(' ')) {
-      setFormError('Password shouldn`t contain spaces');
-      return false;
+      errorMsg = 'Please enter email';
+    } else if (!password.trim()) {
+      errorMsg = 'Please enter password';
+    } else if (password.includes(' ')) {
+      errorMsg = 'Password shouldn`t contain spaces';
+    } else if (!/^(?=.*[A-Za-z])(?=.*\d).+$/.test(password)) {
+      errorMsg = 'Password must contain at least one letter and one number';
     }
 
-    const isValidPassword = /^(?=.*[A-Za-z])(?=.*\d).+$/;
-    if (!isValidPassword.test(password)) {
-      setFormError('Password must contain at least one letter and one number');
-      return false;
-    }
-    return true;
-  };
+    setFormError(errorMsg);
+    return !errorMsg;
+  }, [email, password]);
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (!validateForm()) {
       return;
     }
@@ -61,19 +62,13 @@ const LoginPage: FC = () => {
     setIsSubmitting(true);
     setFormError('');
 
-    try {
-      await dispatch(login({
-        email: email.trim(),
-        password: password.trim()
-      })).unwrap();
-    } catch {
-      if (!formError) {
+    dispatch(login({ email: email.trim(), password: password.trim() }))
+      .unwrap()
+      .catch(() => {
         setFormError('Login failed. Please try again.');
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+      })
+      .finally(() => setIsSubmitting(false));
+  }, [dispatch, email, password, validateForm]);
 
   if (isSubmitting) {
     return <Spinner text="Signing in..." />;

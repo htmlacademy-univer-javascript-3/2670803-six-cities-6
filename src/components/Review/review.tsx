@@ -1,14 +1,6 @@
 import { FC } from 'react';
-
-export type ReviewType = {
-  id: string;
-  userName: string;
-  userAvatar: string;
-  rating: number;
-  text: string;
-  date: string;
-  isPro?: boolean;
-};
+import { ReviewType } from '../types';
+import { withMemo } from '../../hocs/With-memo';
 
 const Review: FC<{ review: ReviewType }> = ({ review }) => {
   const widthPercent = (review.rating / 5) * 100;
@@ -37,4 +29,6 @@ const Review: FC<{ review: ReviewType }> = ({ review }) => {
   );
 };
 
-export default Review;
+const MemoizedReview = withMemo(Review);
+
+export default MemoizedReview;

@@ -1,40 +1,39 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import OfferList from '../../components/OfferList/offerList';
 import { useAppSelector, useAppDispatch } from '../../components/Store';
-import { fetchFavoriteOffers, logout } from '../../components/Store/api-actions';
-import Spinner from '../../components/Spinner/Spinner';
-import ErrorMessage from '../../components/error-message/error-message';
-import MemoizedFavoritesEmpty from '../../hocs/memoized-favorite-empty/memoized-favorite-empty';
+import Spinner from '../../components/spinner/spinner';
+import { MemoizedErrorMessage, MemoizedFavoritesEmpty } from '../../hocs/memoized-component/memoized-component';
+import { MemoizedOfferList } from '../../hocs/memoized-component/memoized-component';
+import { logout } from '../../components/Store/user/user-thunks';
+import { fetchFavoriteOffers } from '../../components/Store/favorites/favorites-thunks';
+import { AuthorizationStatus } from '../../api/types/auth';
 
 const FavoritesPage: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const favoriteOffers = useAppSelector((state) => state.favoriteOffers);
-  const user = useAppSelector((state) => state.user);
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const error = useAppSelector((state) => state.error);
-  const isLoading = useAppSelector((state) => state.isFavoriteLoading);
+  const { favoriteOffers, isFavoriteLoading } = useAppSelector((state) => state.favorites);
+  const { user, authorizationStatus } = useAppSelector((state) => state.user);
+  const error = useAppSelector((state) => state.offer.error);
 
   useEffect(() => {
-    if (authorizationStatus === 'AUTH') {
+    if (authorizationStatus === AuthorizationStatus.Auth) {
       dispatch(fetchFavoriteOffers());
     }
   }, [dispatch, authorizationStatus]);
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     await dispatch(logout());
     navigate('/login');
-  };
+  }, [dispatch, navigate]);
 
-  if (isLoading) {
+  if (isFavoriteLoading) {
     return <Spinner />;
   }
 
   return (
     <div className="page">
-      {error && <ErrorMessage message={error} />}
+      {error && <MemoizedErrorMessage message={error} />}
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
@@ -78,7 +77,7 @@ const FavoritesPage: FC = () => {
           <section className="favorites">
             <h1 className="favorites__title">Saved listing</h1>
             {favoriteOffers.length > 0 ? (
-              <OfferList offers={favoriteOffers} />
+              <MemoizedOfferList offers={favoriteOffers} />
             ) : (
               <MemoizedFavoritesEmpty />
             )}

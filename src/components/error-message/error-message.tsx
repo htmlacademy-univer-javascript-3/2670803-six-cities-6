@@ -1,6 +1,6 @@
-import { FC } from 'react';
-import { useDispatch } from 'react-redux';
-import { setError } from '../Store/action';
+import { FC, useCallback } from 'react';
+import { useAppDispatch } from '../Store';
+import { setError } from '../Store/offers/offer-slice';
 import styles from './error-message.module.css';
 
 interface ErrorMessageProps {
@@ -8,11 +8,11 @@ interface ErrorMessageProps {
 }
 
 const ErrorMessage: FC<ErrorMessageProps> = ({ message }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     dispatch(setError(null));
-  };
+  }, [dispatch]);
 
   return (
     <div className={styles.errorMessage}>

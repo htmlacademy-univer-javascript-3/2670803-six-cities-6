@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Offer } from '../../api/types/offer';
-import { MemoizedMapUpdater } from '../../hocs/memoized-map-updater/memoized-map-updater';
+import { MemoizedMapUpdater } from '../../hocs/memoized-component/memoized-component';
 
 const DEFAULT_CUSTOM_ICON = leaflet.icon({
   iconUrl: '/img/pin.svg',

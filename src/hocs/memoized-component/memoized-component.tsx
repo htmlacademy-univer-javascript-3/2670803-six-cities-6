@@ -1,0 +1,26 @@
+import CitiesList from '../../components/cities-list/citites-list';
+import Spinner from '../../components/spinner/spinner';
+import FavoritesEmpty from '../../components/favorite-empty/favorite-empty';
+import MainEmpty from '../../components/main-empty/main-empty';
+import OfferMap from '../../components/map/map';
+import { MapUpdater } from '../../components/map-updater/map-updater';
+import NearPlacesList from '../../components/near-places-list/near-places-list';
+import OfferList from '../../components/offer-list/offer-list';
+import SortOptions from '../../components/sort-options/sort-options';
+import ErrorMessage from '../../components/error-message/error-message';
+import PlaceCard from '../../components/place-card/place-card';
+import ReviewForm from '../../components/sent-form/sent-form';
+import { withMemo } from '../With-memo';
+
+export const MemoizedCitiesList = withMemo(CitiesList);
+export const MemoizedSpinner = withMemo(Spinner);
+export const MemoizedFavoritesEmpty = withMemo(FavoritesEmpty);
+export const MemoizedMainEmpty = withMemo(MainEmpty);
+export const MemoizedOfferMap = withMemo(OfferMap);
+export const MemoizedMapUpdater = withMemo(MapUpdater);
+export const MemoizedNearPlacesList = withMemo(NearPlacesList);
+export const MemoizedOfferList = withMemo(OfferList);
+export const MemoizedSortOptions = withMemo(SortOptions);
+export const MemoizedErrorMessage = withMemo(ErrorMessage);
+export const MemoizedPlaceCard = withMemo(PlaceCard);
+export const MemoizedReviewForm = withMemo(ReviewForm);

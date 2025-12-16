@@ -1,33 +1,44 @@
-import { FC, useState, ChangeEvent, FormEvent } from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../Store';
-import { postComment } from '../Store/api-actions';
+import { FC, useState, ChangeEvent, FormEvent, useCallback, useMemo } from 'react';
+import { useAppDispatch, useAppSelector } from '../Store';
+import { postComment } from '../Store/comments/comment-thunks';
 
 type ReviewFormProps = {
   offerId: string;
 };
 
+type FormData = { rating: number; reviewText: string };
+
 const ReviewForm: FC<ReviewFormProps> = ({ offerId }) => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const commentsLoading = useAppSelector((state) => state.comments.commentsLoading);
 
-  const [formData, setFormData] = useState({
-    rating: 0,
-    reviewText: '',
-  });
-
+  const [formData, setFormData] = useState<FormData>({ rating: 0, reviewText: '',});
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleFieldChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: name === 'rating' ? Number(value) : value });
-  };
+  const ratingOptions = useMemo(() => [5, 4, 3, 2, 1], []);
 
-  const isValid = formData.rating > 0 && formData.reviewText.length >= 50 && formData.reviewText.length <= 300;
+  const isValid = useMemo(
+    () =>
+      formData.rating > 0 &&
+      formData.reviewText.length >= 50 &&
+      formData.reviewText.length <= 300,
+    [formData]
+  );
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleFieldChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({
+        ...prev,
+        [name]: name === 'rating' ? Number(value) : value,
+      }));
+    },
+    []
+  );
+
+  const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault();
-
     if (!isValid || isSubmitting) {
       return;
     }
@@ -39,25 +50,22 @@ const ReviewForm: FC<ReviewFormProps> = ({ offerId }) => {
       try {
         await dispatch(postComment({
           offerId,
-          commentData: {
-            rating: formData.rating,
-            comment: formData.reviewText,
-          },
+          commentData: { rating: formData.rating, comment: formData.reviewText },
         }));
         setFormData({ rating: 0, reviewText: '' });
-      } catch (err) {
+      } catch {
         setError('Failed to send review. Please try again.');
       } finally {
         setIsSubmitting(false);
       }
     })();
-  };
+  }, [dispatch, offerId, formData, isValid, isSubmitting]);
 
   return (
     <form className="reviews__form form" onSubmit={handleSubmit}>
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <div className="reviews__rating-form form__rating">
-        {[5,4,3,2,1].map((num) => (
+        {ratingOptions.map((num) => (
           <span key={num}>
             <input
               className="form__rating-input visually-hidden"
@@ -94,7 +102,7 @@ const ReviewForm: FC<ReviewFormProps> = ({ offerId }) => {
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={!isValid || isSubmitting}
+          disabled={!isValid || isSubmitting || commentsLoading}
         >
           {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>

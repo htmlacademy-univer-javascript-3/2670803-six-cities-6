@@ -5,15 +5,16 @@ import NotFoundPage from './pages/NotFound/notFoundPage';
 import LoginPage from './pages/LoginPage/loginPage';
 import FavoritesPage from './pages/FavoritesPage/favoritesPage';
 import OfferPage from './pages/OfferPage/offerPage';
-import PrivateRoute from './components/PrivateRoute/privateRoute';
+import PrivateRoute from './components/private-route/private-route';
 import { useAppDispatch, useAppSelector } from './components/Store';
-import Spinner from './components/Spinner/Spinner';
-import { checkAuth, logout } from './components/Store/api-actions';
+import Spinner from './components/spinner/spinner';
+import { checkAuth, logout } from './components/Store/user/user-thunks';
+import { AuthorizationStatus } from './api/types/auth';
 
 const App: FC = () => {
   const dispatch = useAppDispatch();
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const user = useAppSelector((state) => state.user);
+  const authorizationStatus = useAppSelector((state) => state.user.authorizationStatus);
+  const user = useAppSelector((state) => state.user.user);
 
   useEffect(() => {
     dispatch(checkAuth());
@@ -25,7 +26,7 @@ const App: FC = () => {
     })();
   };
 
-  if (authorizationStatus === 'UNKNOWN') {
+  if (authorizationStatus === AuthorizationStatus.Unknown) {
     return <Spinner />;
   }
 
@@ -41,7 +42,7 @@ const App: FC = () => {
           />
         }
         />
-        <Route path="/login" element={authorizationStatus === 'AUTH' ? (<Navigate to="/" replace />) : (<LoginPage />)}/>
+        <Route path="/login" element={authorizationStatus === AuthorizationStatus.Auth ? (<Navigate to="/" replace />) : (<LoginPage />)}/>
         <Route element={<PrivateRoute />}>
           <Route path="/favorites" element={<FavoritesPage />} />
         </Route>

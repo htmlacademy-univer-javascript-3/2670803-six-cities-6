@@ -1,26 +1,21 @@
-import { FC, useState } from 'react';
+import { FC, useState, useCallback } from 'react';
+import { SortType } from '../types';
+import { SortOptionsProps } from '../types';
 
-export type SortType = 'Popular' | 'Price: low to high' | 'Price: high to low' | 'Top rated first';
-
-interface SortOptionsProps {
-  currentSort: SortType;
-  onSortChange: (sortType: SortType) => void;
-}
+const SORT_TYPES: SortType[] = [
+  'Popular',
+  'Price: low to high',
+  'Price: high to low',
+  'Top rated first'
+];
 
 const SortOptions: FC<SortOptionsProps> = ({ currentSort, onSortChange }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const sortTypes: SortType[] = [
-    'Popular',
-    'Price: low to high',
-    'Price: high to low',
-    'Top rated first'
-  ];
-
-  const handleSortClick = (sortType: SortType) => {
+  const handleSortClick = useCallback((sortType: SortType) => {
     onSortChange(sortType);
     setIsOpen(false);
-  };
+  }, [onSortChange]);
 
   return (
     <form className="places__sorting" action="#" method="get">
@@ -36,7 +31,7 @@ const SortOptions: FC<SortOptionsProps> = ({ currentSort, onSortChange }) => {
         </svg>
       </span>
       <ul className={`places__options places__options--custom ${isOpen ? 'places__options--opened' : ''}`}>
-        {sortTypes.map((sortType) => (
+        {SORT_TYPES.map((sortType) => (
           <li
             key={sortType}
             className={`places__option ${currentSort === sortType ? 'places__option--active' : ''}`}

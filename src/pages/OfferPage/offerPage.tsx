@@ -1,19 +1,48 @@
-import { FC, useEffect } from 'react';
+import { FC, useCallback, useEffect, useMemo } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../components/Store';
-import ReviewForm from '../../components/SentForm/sentForm';
-import ReviewList from '../../components/ReviewList/reviewList';
-import Spinner from '../../components/Spinner/Spinner';
-import { fetchOfferData, logout, toggleFavoriteOffer } from '../../components/Store/api-actions';
-import MemoizedOfferMap from '../../hocs/memoized-map/memoized-map';
-import { MemoizedNearPlacesList } from '../../hocs/memoized-near-places-list/memoized-near-place-list';
+import Spinner from '../../components/spinner/spinner';
+import { MemoizedOfferMap, MemoizedReviewForm } from '../../hocs/memoized-component/memoized-component';
+import { MemoizedNearPlacesList } from '../../hocs/memoized-component/memoized-component';
+import MemoizedReviewList from '../../components/review-list/review-list';
+import { fetchOfferData } from '../../components/Store/offers/offer-thunks';
+import { logout } from '../../components/Store/user/user-thunks';
+import { toggleFavoriteOffer } from '../../components/Store/favorites/favorites-thunks';
+import { AuthorizationStatus } from '../../api/types/auth';
+import { createSelector } from '@reduxjs/toolkit';
+import { RootState } from '../../components/Store';
+import NotFoundPage from '../NotFound/notFoundPage';
+
+const selectOfferPageData = createSelector(
+  (state: RootState) => state.offer,
+  (state: RootState) => state.user,
+  (state: RootState) => state.favorites,
+  (state: RootState) => state.comments,
+  (offer, user, favorites, comments) => ({
+    offerDetails: offer.offerDetails,
+    nearbyOffers: offer.nearbyOffers,
+    comments: comments.comments || [],
+    commentsLoading: comments.commentsLoading,
+    authorizationStatus: user.authorizationStatus,
+    user: user.user,
+    favoriteOffers: favorites.favoriteOffers,
+  })
+);
 
 const OfferPage: FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { offerDetails, nearbyOffers, comments, commentsLoading, authorizationStatus, user, favoriteOffers } = useAppSelector((state) => state);
+  const {
+    offerDetails,
+    nearbyOffers,
+    comments,
+    commentsLoading,
+    authorizationStatus,
+    user,
+    favoriteOffers
+  } = useAppSelector(selectOfferPageData);
 
   useEffect(() => {
     if (!id) {
@@ -21,6 +50,38 @@ const OfferPage: FC = () => {
     }
     dispatch(fetchOfferData(id));
   }, [dispatch, id]);
+
+  const isFavorite = useMemo(
+    () => offerDetails ? favoriteOffers.some((offer) => offer.id === offerDetails.id) : false,
+    [favoriteOffers, offerDetails]
+  );
+
+  const handleFavoriteClick = useCallback(() => {
+    if (!offerDetails) {
+      return;
+    }
+    if (authorizationStatus !== AuthorizationStatus.Auth) {
+      navigate('/login');
+      return;
+    }
+    dispatch(toggleFavoriteOffer({ offerId: offerDetails.id, isFavorite }));
+  }, [authorizationStatus, dispatch, navigate, offerDetails, isFavorite]);
+
+  const handleLogout = useCallback(() => {
+    dispatch(logout()).then(() => navigate('/login'));
+  }, [dispatch, navigate]);
+
+  const reviews = useMemo(() => comments.map((comment) => ({
+    id: comment.id,
+    userName: comment.user.name,
+    userAvatar: comment.user.avatarUrl,
+    rating: comment.rating,
+    text: comment.comment,
+    date: comment.date,
+    isPro: comment.user.isPro,
+  })), [comments]);
+
+  const favoriteCount = favoriteOffers.length;
 
   if (!offerDetails) {
     return (
@@ -33,19 +94,14 @@ const OfferPage: FC = () => {
   }
 
   if (!offerDetails.id) {
-    navigate('/404');
-    return null;
+    return (
+      <NotFoundPage
+        authorizationStatus={authorizationStatus}
+        user={user}
+        handleSignOut={handleLogout}
+      />
+    );
   }
-
-  const isFavorite = favoriteOffers.some((offer) => offer.id === offerDetails.id);
-
-  const handleFavoriteClick = () => {
-    if (authorizationStatus !== 'AUTH') {
-      navigate('/login');
-      return;
-    }
-    dispatch(toggleFavoriteOffer({ offerId: offerDetails.id, isFavorite }));
-  };
 
   const {
     title,
@@ -62,25 +118,6 @@ const OfferPage: FC = () => {
     host,
   } = offerDetails;
 
-  const reviews = comments.map((comment) => ({
-    id: comment.id,
-    userName: comment.user.name,
-    userAvatar: comment.user.avatarUrl,
-    rating: comment.rating,
-    text: comment.comment,
-    date: comment.date,
-    isPro: comment.user.isPro,
-  }));
-
-  const handleLogout = (e: React.MouseEvent) => {
-    e.preventDefault();
-    dispatch(logout()).then(() => {
-      navigate('/login');
-    });
-  };
-
-  const favoriteCount = favoriteOffers.length;
-
   return (
     <div className="page">
       <header className="header">
@@ -94,7 +131,7 @@ const OfferPage: FC = () => {
 
             <nav className="header__nav">
               <ul className="header__nav-list">
-                {authorizationStatus === 'AUTH' ? (
+                {authorizationStatus === AuthorizationStatus.Auth ? (
                   <>
                     <li className="header__nav-item user">
                       <Link className="header__nav-link header__nav-link--profile" to="/favorites">
@@ -220,9 +257,9 @@ const OfferPage: FC = () => {
               </div>
 
               <section className="offer__reviews reviews">
-                {commentsLoading ? <Spinner text="Loading comments..." /> : <ReviewList reviews={reviews} />}
-                {authorizationStatus === 'AUTH' && offerDetails.id && (
-                  <ReviewForm offerId={offerDetails.id} />
+                {commentsLoading ? <Spinner text="Loading comments..." /> : <MemoizedReviewList reviews={reviews} />}
+                {authorizationStatus === AuthorizationStatus.Auth && offerDetails.id && (
+                  <MemoizedReviewForm offerId={offerDetails.id} />
                 )}
               </section>
             </div>

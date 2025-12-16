@@ -1,32 +1,46 @@
-import { FC, useState, useEffect, useMemo } from 'react';
+import { FC, useState, useEffect, useMemo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import OfferList from '../../components/OfferList/offerList';
-import { RootState, AppDispatch } from '../../components/Store';
-import { useSelector, useDispatch } from 'react-redux';
-import { setCity } from '../../components/Store/action';
-import MemoizedCitiesList from '../../hocs/memoized-cties-list/memoized-cities-list';
-import SortOptions, { SortType } from '../../components/SortOptions/sortOptions';
-import { fetchOffers, logout } from '../../components/Store/api-actions';
-import Spinner from '../../components/Spinner/Spinner';
+import { useAppSelector, useAppDispatch } from '../../components/Store';
 import ErrorMessage from '../../components/error-message/error-message';
-import { useAppSelector } from '../../components/Store';
-import MemoizedMainEmpty from '../../hocs/memoized-main-empty/memoized-main-empty';
-import MemoizedOfferMap from '../../hocs/memoized-map/memoized-map';
+import {
+  MemoizedCitiesList,
+  MemoizedMainEmpty,
+  MemoizedOfferMap,
+  MemoizedOfferList,
+  MemoizedSortOptions,
+  MemoizedSpinner,
+} from '../../hocs/memoized-component/memoized-component';
+import { SortType } from '../../components/types';
+import { setCity } from '../../components/Store/offers/offer-slice';
+import { fetchOffers } from '../../components/Store/offers/offer-thunks';
+import { logout } from '../../components/Store/user/user-thunks';
+import { AuthorizationStatus } from '../../api/types/auth';
+import { createSelector } from '@reduxjs/toolkit';
+import { RootState } from '../../components/Store';
+
+const selectMainPageData = createSelector(
+  (state: RootState) => state.offer,
+  (state: RootState) => state.user,
+  (offer, user) => ({
+    selectedCity: offer.city,
+    offers: offer.offers,
+    error: offer.error,
+    user: user.user,
+    authorizationStatus: user.authorizationStatus,
+  })
+);
 
 const MainPage: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const selectedCity = useSelector((state: RootState) => state.city);
-  const offers = useSelector((state: RootState) => state.offers);
-  const error = useSelector((state: RootState) => state.error);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const { selectedCity, offers, error, user, authorizationStatus } = useAppSelector(selectMainPageData);
 
   const [currentSort, setCurrentSort] = useState<SortType>('Popular');
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const user = useSelector((state: RootState) => state.user);
-  const favoriteCount = offers.filter((offer) => offer.isFavorite).length;
+  const favoriteCount = useMemo(() => offers.filter((o) => o.isFavorite).length, [offers]);
 
   const filteredOffers = useMemo(
     () => offers.filter((offer) => offer.city.name === selectedCity),
@@ -59,30 +73,26 @@ const MainPage: FC = () => {
     loadOffers();
   }, [dispatch]);
 
-  if (isLoading) {
-    return (
-      <Spinner />
-    );
-  }
-
-  const handleCitychange = (city: string) => {
+  const handleCityChange = useCallback((city: string) => {
     dispatch(setCity(city));
-  };
+  }, [dispatch]);
 
-  const handleSortChange = (sortType: SortType) => {
+  const handleSortChange = useCallback((sortType: SortType) => {
     setCurrentSort(sortType);
-  };
+  }, []);
 
-  const handleOfferHover = (offerId: string | null) => {
+  const handleOfferHover = useCallback((offerId: string | null) => {
     setActiveOfferId(offerId);
-  };
+  }, []);
 
-  const handleLogout = (e: React.MouseEvent) => {
+  const handleLogout = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    dispatch(logout()).then(() => {
-      navigate('/login');
-    });
-  };
+    dispatch(logout()).then(() => navigate('/login'));
+  }, [dispatch, navigate]);
+
+  if (isLoading) {
+    return <MemoizedSpinner text="Loading offers..." />;
+  }
 
   return (
     <div className="page page--gray page--main">
@@ -97,7 +107,7 @@ const MainPage: FC = () => {
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
-                {authorizationStatus === 'AUTH' ? (
+                {authorizationStatus === AuthorizationStatus.Auth ? (
                   <>
                     <li className="header__nav-item user">
                       <Link className="header__nav-link header__nav-link--profile" to="/favorites">
@@ -143,7 +153,7 @@ const MainPage: FC = () => {
         <div className="tabs">
           <MemoizedCitiesList
             currentCity={selectedCity}
-            onCityChange={handleCitychange}
+            onCityChange={handleCityChange}
           />
         </div>
         {filteredOfferCount === 0 ? (
@@ -154,11 +164,11 @@ const MainPage: FC = () => {
               <section className="cities__places places">
                 <h2 className="visually-hidden">Places</h2>
                 <b className="places__found">{filteredOfferCount} places to stay in {selectedCity}</b>
-                <SortOptions
+                <MemoizedSortOptions
                   currentSort={currentSort}
                   onSortChange={handleSortChange}
                 />
-                <OfferList
+                <MemoizedOfferList
                   offers={memoizedSortedOffers}
                   onOfferHover={handleOfferHover}
                 />

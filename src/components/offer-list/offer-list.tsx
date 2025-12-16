@@ -2,24 +2,28 @@ import { FC, useCallback } from 'react';
 import { Offer } from '../../api/types/offer';
 import { MemoizedPlaceCard } from '../../hocs/memoized-component/memoized-component';
 
-type NearPlacesListProps = {
+type OfferListProps = {
   offers: Offer[];
   onOfferHover?: (offerId: string | null) => void;
 }
 
-const NearPlacesList: FC<NearPlacesListProps> = ({ offers, onOfferHover }) => {
+const OfferList: FC<OfferListProps> = ({ offers, onOfferHover }) => {
   const handleMouseEnter = useCallback(
-    (id: string) => () => onOfferHover?.(id),
+    (id: string) => () => {
+      onOfferHover?.(id);
+    },
     [onOfferHover]
   );
 
   const handleMouseLeave = useCallback(
-    () => onOfferHover?.(null),
+    () => {
+      onOfferHover?.(null);
+    },
     [onOfferHover]
   );
 
   return (
-    <div className="near-places__list places__list">
+    <div className="cities__places-list places__list tabs__content">
       {offers.map((offer) => (
         <MemoizedPlaceCard
           key={offer.id}
@@ -31,4 +35,5 @@ const NearPlacesList: FC<NearPlacesListProps> = ({ offers, onOfferHover }) => {
     </div>
   );
 };
-export default NearPlacesList;
+
+export default OfferList;

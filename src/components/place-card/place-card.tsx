@@ -1,8 +1,9 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Offer } from '../../api/types/offer';
 import { useAppDispatch, useAppSelector } from '../Store';
-import { toggleFavoriteOffer } from '../Store/api-actions';
+import { toggleFavoriteOffer } from '../Store/favorites/favorites-thunks';
+import { AuthorizationStatus } from '../../api/types/auth';
 
 type PlaceCardProps = {
   offer: Offer;
@@ -15,15 +16,21 @@ type PlaceCardProps = {
 const PlaceCard: FC<PlaceCardProps> = ({ offer, onMouseEnter, onMouseLeave, isActive, className = 'cities__card'}) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authorizationStatus = useAppSelector((state) => state.user.authorizationStatus);
 
-  const handleFavoriteClick = () => {
-    if (authorizationStatus !== 'AUTH') {
+  const handleFavoriteClick = useCallback(() => {
+    if (authorizationStatus === AuthorizationStatus.Auth) {
       navigate('/login');
       return;
     }
-    dispatch(toggleFavoriteOffer({ offerId: offer.id, isFavorite: offer.isFavorite }));
-  };
+
+    dispatch(
+      toggleFavoriteOffer({
+        offerId: offer.id,
+        isFavorite: offer.isFavorite,
+      })
+    );
+  }, [authorizationStatus, dispatch, navigate, offer.id, offer.isFavorite]);
 
   return (
     <article

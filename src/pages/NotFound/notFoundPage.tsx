@@ -1,9 +1,10 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './notFoundPage.module.css';
+import { AuthorizationStatus } from '../../api/types/auth';
 
 interface NotFoundPageProps {
-  authorizationStatus: 'AUTH' | 'NO_AUTH' | 'UNKNOWN';
+  authorizationStatus: AuthorizationStatus;
   user: { email: string; avatarUrl?: string } | null;
   handleSignOut: () => void;
 }
@@ -21,7 +22,7 @@ const NotFoundPage: FC<NotFoundPageProps> = ({ authorizationStatus, user, handle
 
           <nav className="header__nav">
             <ul className="header__nav-list">
-              {authorizationStatus === 'AUTH' && user ? (
+              {authorizationStatus === AuthorizationStatus.Auth && user ? (
                 <>
                   <li className="header__nav-item user">
                     <Link className="header__nav-link header__nav-link--profile" to="/profile">
