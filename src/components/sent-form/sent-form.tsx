@@ -1,18 +1,21 @@
 import { FC, useState, ChangeEvent, FormEvent, useCallback, useMemo } from 'react';
-import { useAppDispatch, useAppSelector } from '../Store';
-import { postComment } from '../Store/comments/comment-thunks';
+import { useAppDispatch, useAppSelector } from '../store';
+import { postComment } from '../store/comments/comment-thunks';
 
 type ReviewFormProps = {
   offerId: string;
 };
 
-type FormData = { rating: number; reviewText: string };
+const MIN_REVIEW_LENGTH = 50;
+const MAX_REVIEW_LENGTH = 300;
+
+type ReviewFormData = { rating: number; reviewText: string };
 
 const ReviewForm: FC<ReviewFormProps> = ({ offerId }) => {
   const dispatch = useAppDispatch();
   const commentsLoading = useAppSelector((state) => state.comments.commentsLoading);
 
-  const [formData, setFormData] = useState<FormData>({ rating: 0, reviewText: '',});
+  const [formData, setFormData] = useState<ReviewFormData>({ rating: 0, reviewText: '',});
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -21,8 +24,8 @@ const ReviewForm: FC<ReviewFormProps> = ({ offerId }) => {
   const isValid = useMemo(
     () =>
       formData.rating > 0 &&
-      formData.reviewText.length >= 50 &&
-      formData.reviewText.length <= 300,
+      formData.reviewText.length >= MIN_REVIEW_LENGTH &&
+      formData.reviewText.length <= MAX_REVIEW_LENGTH,
     [formData]
   );
 
@@ -37,32 +40,43 @@ const ReviewForm: FC<ReviewFormProps> = ({ offerId }) => {
     []
   );
 
-  const handleSubmit = useCallback((e: FormEvent) => {
-    e.preventDefault();
-    if (!isValid || isSubmitting) {
-      return;
-    }
+  const handleSubmit = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault();
 
-    setIsSubmitting(true);
-    setError(null);
+      if (!isValid || isSubmitting) {
+        return;
+      }
 
-    (async () => {
+      setIsSubmitting(true);
+      setError(null);
+
       try {
-        await dispatch(postComment({
-          offerId,
-          commentData: { rating: formData.rating, comment: formData.reviewText },
-        }));
+        await dispatch(
+          postComment({
+            offerId,
+            commentData: {
+              rating: formData.rating,
+              comment: formData.reviewText,
+            },
+          })
+        ).unwrap();
+
         setFormData({ rating: 0, reviewText: '' });
       } catch {
         setError('Failed to send review. Please try again.');
       } finally {
         setIsSubmitting(false);
       }
-    })();
-  }, [dispatch, offerId, formData, isValid, isSubmitting]);
+    },
+    [dispatch, offerId, formData, isValid, isSubmitting]
+  );
 
   return (
-    <form className="reviews__form form" onSubmit={handleSubmit}>
+    <form className="reviews__form form" onSubmit={(e) => {
+      void handleSubmit(e);
+    }}
+    >
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <div className="reviews__rating-form form__rating">
         {ratingOptions.map((num) => (

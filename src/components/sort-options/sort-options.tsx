@@ -1,6 +1,6 @@
 import { FC, useState, useCallback } from 'react';
-import { SortType } from '../types';
-import { SortOptionsProps } from '../types';
+import { SortType } from '../types/types';
+import { SortOptionsProps } from '../types/types';
 
 const SORT_TYPES: SortType[] = [
   'Popular',
@@ -17,13 +17,17 @@ const SortOptions: FC<SortOptionsProps> = ({ currentSort, onSortChange }) => {
     setIsOpen(false);
   }, [onSortChange]);
 
+  const handleToggle = useCallback(() => {
+    setIsOpen((prev) => !prev);
+  }, []);
+
   return (
     <form className="places__sorting" action="#" method="get">
       <span className="places__sorting-caption">Sort by</span>
       <span
         className="places__sorting-type"
         tabIndex={0}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggle}
       >
         {currentSort}
         <svg className="places__sorting-arrow" width="7" height="4">

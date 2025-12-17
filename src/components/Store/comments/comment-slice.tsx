@@ -1,19 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Comment } from '../../../api/types/comment';
+import { Comment } from '../../../api/types/types';
 
 export interface CommentsState {
   comments: Comment[];
   commentsLoading: boolean;
 }
 
-export const initialCommentsState: CommentsState = {
+export const INITIAL_COMMENTS_STATE: CommentsState = {
   comments: [],
   commentsLoading: false,
 };
 
 const commentsSlice = createSlice({
   name: 'comments',
-  initialState: initialCommentsState,
+  initialState: INITIAL_COMMENTS_STATE,
   reducers: {
     setComments: (state, action: PayloadAction<Comment[]>) => {
       state.comments = action.payload;

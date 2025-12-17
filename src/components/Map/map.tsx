@@ -2,8 +2,8 @@ import { FC, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Offer } from '../../api/types/offer';
-import { MapUpdater } from '../map-updater/map-updater';
+import { Offer } from '../../api/types/types';
+import MapUpdater from '../map-updater/map-updater';
 
 const DEFAULT_CUSTOM_ICON = leaflet.icon({
   iconUrl: '/img/pin.svg',

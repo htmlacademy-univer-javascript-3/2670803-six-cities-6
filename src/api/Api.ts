@@ -1,10 +1,14 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { Offer } from './types/offer';
-import { Comment, CommentData } from './types/comment';
+import { Offer } from './types/types';
+import { Comment, CommentData } from './types/types';
 
 const BASE_URL = 'https://14.design.htmlacademy.pro/six-cities';
 const TIMEOUT = 5000;
 const AUTH_TOKEN_KEY = 'six-cities-token';
+const FAVORITE_STATUS = {
+  Remove: 0,
+  Add: 1,
+};
 
 export const saveToken = (token: string): void => {
   localStorage.setItem(AUTH_TOKEN_KEY, token);
@@ -81,7 +85,7 @@ export const getFavoriteOffers = async (): Promise<Offer[]> => {
 };
 
 export const toggleFavorite = async (offerId: string, isFavorite: boolean): Promise<Offer> => {
-  const status = isFavorite ? 0 : 1;
+  const status = isFavorite ? FAVORITE_STATUS.Remove : FAVORITE_STATUS.Add;
   const response = await API.post<Offer>(`/favorite/${offerId}/${status}`);
   return response.data;
 };

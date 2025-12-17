@@ -1,4 +1,4 @@
-import { FC} from 'react';
+import { FC } from 'react';
 import CityItem from '../city-item/city-item';
 
 interface CitiesListProps {

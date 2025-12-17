@@ -1,17 +1,15 @@
 import { FC, useCallback, useEffect, useMemo } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../components/Store';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '../../components/store';
 import Spinner from '../../components/spinner/spinner';
-import { MemoizedOfferMap, MemoizedReviewForm } from '../../hocs/memoized-component/memoized-component';
-import { MemoizedNearPlacesList } from '../../hocs/memoized-component/memoized-component';
-import MemoizedReviewList from '../../components/review-list/review-list';
-import { fetchOfferData } from '../../components/Store/offers/offer-thunks';
-import { logout } from '../../components/Store/user/user-thunks';
-import { toggleFavoriteOffer } from '../../components/Store/favorites/favorites-thunks';
-import { AuthorizationStatus } from '../../api/types/auth';
+import { MemoizedOfferMap, MemoizedReviewForm, MemoizedReviewList, MemoizedNearPlacesList, MemoizedHeader} from '../../hocs/memoized-component/memoized-component';
+import { fetchOfferData } from '../../components/store/offers/offer-thunks';
+import { logout } from '../../components/store/user/user-thunks';
+import { toggleFavoriteOffer } from '../../components/store/favorites/favorites-thunks';
+import { AuthorizationStatus } from '../../api/types/types';
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from '../../components/Store';
-import NotFoundPage from '../NotFound/notFoundPage';
+import { RootState } from '../../components/store';
+import NotFoundPage from '../not-found-page/not-found-page';
 
 const selectOfferPageData = createSelector(
   (state: RootState) => state.offer,
@@ -45,15 +43,17 @@ const OfferPage: FC = () => {
   } = useAppSelector(selectOfferPageData);
 
   useEffect(() => {
-    if (!id) {
-      return;
+    if (id) {
+      dispatch(fetchOfferData(id));
     }
-    dispatch(fetchOfferData(id));
   }, [dispatch, id]);
 
   const isFavorite = useMemo(
-    () => offerDetails ? favoriteOffers.some((offer) => offer.id === offerDetails.id) : false,
-    [favoriteOffers, offerDetails]
+    () =>
+      authorizationStatus === AuthorizationStatus.Auth && offerDetails
+        ? favoriteOffers.some((offer) => offer.id === offerDetails.id)
+        : false,
+    [favoriteOffers, offerDetails, authorizationStatus]
   );
 
   const handleFavoriteClick = useCallback(() => {
@@ -80,8 +80,6 @@ const OfferPage: FC = () => {
     date: comment.date,
     isPro: comment.user.isPro,
   })), [comments]);
-
-  const favoriteCount = favoriteOffers.length;
 
   if (!offerDetails) {
     return (
@@ -120,57 +118,12 @@ const OfferPage: FC = () => {
 
   return (
     <div className="page">
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <Link className="header__logo-link" to="/">
-                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
-              </Link>
-            </div>
-
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                {authorizationStatus === AuthorizationStatus.Auth ? (
-                  <>
-                    <li className="header__nav-item user">
-                      <Link className="header__nav-link header__nav-link--profile" to="/favorites">
-                        <div className="header__avatar-wrapper user__avatar-wrapper">
-                          {user && (
-                            <img
-                              className="header__avatar user__avatar"
-                              src={user.avatarUrl}
-                              alt={user.name}
-                              width="20"
-                              height="20"
-                            />
-                          )}
-                        </div>
-                        <span className="header__user-name user__name">
-                          {user ? user.email : 'Loading...'}
-                        </span>
-                        <span className="header__favorite-count">{favoriteCount}</span>
-                      </Link>
-                    </li>
-                    <li className="header__nav-item">
-                      <a className="header__nav-link" href="#" onClick={handleLogout}>
-                        <span className="header__signout">Sign out</span>
-                      </a>
-                    </li>
-                  </>
-                ) : (
-                  <li className="header__nav-item user">
-                    <Link className="header__nav-link header__nav-link--profile" to="/login">
-                      <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                      <span className="header__login">Sign in</span>
-                    </Link>
-                  </li>
-                )}
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <MemoizedHeader
+        authorizationStatus={authorizationStatus}
+        user={user}
+        favoriteCount={favoriteOffers.length}
+        onSignOut={handleLogout}
+      />
 
       <main className="page__main page__main--offer">
         <section className="offer">
@@ -251,7 +204,7 @@ const OfferPage: FC = () => {
 
                 <div className="offer__description">
                   {description?.split('\n').map((line) => (
-                    <p className="offer__text" key={line}>{line}</p>
+                    <p key={line}>{line}</p>
                   ))}
                 </div>
               </div>

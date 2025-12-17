@@ -1,10 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { setUser, setAuthorizationStatus } from './user-slice';
-import { API, saveToken, dropToken } from '../../../api/Api';
+import { API, saveToken, dropToken } from '../../../api/api';
 import { AppDispatch } from '..';
-import { UserData, LoginResponse } from '../../../api/types/auth';
+import { UserData, LoginResponse, AuthorizationStatus } from '../../../api/types/types';
 import { setError } from '../offers/offer-slice';
-import { AuthorizationStatus } from '../../../api/types/auth';
 
 export const checkAuth = createAsyncThunk<
   void,
@@ -53,5 +52,6 @@ export const logout = createAsyncThunk<
   dropToken();
   dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
   dispatch(setUser(null));
+  dispatch({ type: 'favorites/setFavoriteOffers', payload: [] });
 
 });

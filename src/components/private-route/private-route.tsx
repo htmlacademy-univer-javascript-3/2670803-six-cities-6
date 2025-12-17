@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { FC } from 'react';
-import { useAppSelector } from '../Store';
-import { AuthorizationStatus } from '../../api/types/auth';
+import { useAppSelector } from '../store';
+import { AuthorizationStatus } from '../../api/types/types';
 
 const PrivateRoute: FC = () => {
   const authorizationStatus = useAppSelector((state) => state.user.authorizationStatus);

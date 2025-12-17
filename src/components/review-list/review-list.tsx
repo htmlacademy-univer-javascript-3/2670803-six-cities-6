@@ -1,13 +1,18 @@
 import { FC, useMemo } from 'react';
-import MemoizedReview from '../review/review';
-import { ReviewType } from '../types';
-import { withMemo } from '../../hocs/With-memo';
+import { MemoizedReview } from '../../hocs/memoized-component/memoized-component';
+import { ReviewType } from '../types/types';
 
-const ReviewList: FC<{ reviews: ReviewType[] }> = ({ reviews }) => {
+interface ReviewListProps {
+  reviews: ReviewType[];
+}
+
+const MAX_REVIEWS = 10;
+
+const ReviewList: FC<ReviewListProps> = ({ reviews }) => {
   const sortedReviews = useMemo(() =>
     [...reviews]
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 10),
+      .slice(0, MAX_REVIEWS),
   [reviews]
   );
 
@@ -25,6 +30,4 @@ const ReviewList: FC<{ reviews: ReviewType[] }> = ({ reviews }) => {
   );
 };
 
-const MemoizedReviewList = withMemo(ReviewList);
-
-export default MemoizedReviewList;
+export default ReviewList;

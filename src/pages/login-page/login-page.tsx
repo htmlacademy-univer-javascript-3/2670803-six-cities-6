@@ -1,11 +1,12 @@
 import { FC, useState, FormEvent, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../components/Store';
+import { useAppDispatch, useAppSelector } from '../../components/store';
 import Spinner from '../../components/spinner/spinner';
-import { login } from '../../components/Store/user/user-thunks';
-import { AuthorizationStatus } from '../../api/types/auth';
+import { login } from '../../components/store/user/user-thunks';
+import { AuthorizationStatus } from '../../api/types/types';
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from '../../components/Store';
+import { RootState } from '../../components/store';
+import { MemoizedHeader } from '../../hocs/memoized-component/memoized-component';
 
 const selectLoginData = createSelector(
   (state: RootState) => state.user.authorizationStatus,
@@ -25,15 +26,24 @@ const LoginPage: FC = () => {
   const [formError, setFormError] = useState<string>('');
 
   useEffect(() => {
-    if (authorizationStatus === AuthorizationStatus.Auth) {
+    let isMounted = true;
+    if (isMounted && authorizationStatus === AuthorizationStatus.Auth) {
       navigate('/');
     }
+    return () => {
+      isMounted = false;
+    };
   }, [authorizationStatus, navigate]);
 
   useEffect(() => {
-    if (error) {
+    let isMounted = true;
+    if (isMounted && error) {
       setFormError(error);
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [error]);
 
   const validateForm = useCallback((): boolean => {
@@ -45,7 +55,7 @@ const LoginPage: FC = () => {
       errorMsg = 'Please enter password';
     } else if (password.includes(' ')) {
       errorMsg = 'Password shouldn`t contain spaces';
-    } else if (!/^(?=.*[A-Za-z])(?=.*\d).+$/.test(password)) {
+    } else if (!/^(?=.*[A-Za-zА-Яа-яЁё])(?=.*\d).+$/.test(password)) {
       errorMsg = 'Password must contain at least one letter and one number';
     }
 
@@ -76,17 +86,11 @@ const LoginPage: FC = () => {
 
   return (
     <div className="page page--gray page--login">
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <Link className="header__logo-link" to="/">
-                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      <MemoizedHeader
+        authorizationStatus={authorizationStatus}
+        user={null}
+        hideAuthLinks
+      />
 
       <main className="page__main page__main--login">
         <div className="page__login-container container">

@@ -2,9 +2,9 @@ import { setOffers, setOfferDetails, setNearbyOffers, setError } from './offer-s
 import { fetchComments } from '../comments/comment-thunks';
 
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { API } from '../../../api/Api';
+import { API } from '../../../api/api';
 import { AppDispatch } from '..';
-import { Offer } from '../../../api/types/offer';
+import { Offer } from '../../../api/types/types';
 
 export const fetchOffers = createAsyncThunk<
   void,

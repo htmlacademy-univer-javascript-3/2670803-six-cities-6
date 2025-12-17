@@ -1,11 +1,14 @@
 import { FC } from 'react';
-import { useAppDispatch } from '../Store';
-import { setError } from '../Store/offers/offer-slice';
+import { useAppDispatch } from '../store';
+import { setError } from '../store/offers/offer-slice';
 import styles from './error-message.module.css';
 
 interface ErrorMessageProps {
   message: string;
 }
+
+const ERROR_ICON = '⚠️' as const;
+const CLOSE_ICON = '✕' as const;
 
 const ErrorMessage: FC<ErrorMessageProps> = ({ message }) => {
   const dispatch = useAppDispatch();
@@ -17,7 +20,7 @@ const ErrorMessage: FC<ErrorMessageProps> = ({ message }) => {
   return (
     <div className={styles.errorMessage}>
       <div className={styles.errorMessageContent}>
-        <span className={styles.errorIcon}>⚠️</span>
+        <span className={styles.errorIcon}>{ERROR_ICON}</span>
         <p className={styles.errorText}>{message}</p>
         <button
           className={styles.errorMessageClose}
@@ -25,7 +28,7 @@ const ErrorMessage: FC<ErrorMessageProps> = ({ message }) => {
           aria-label="Close error message"
           onClick={handleClose}
         >
-          ✕
+          {CLOSE_ICON}
         </button>
       </div>
     </div>

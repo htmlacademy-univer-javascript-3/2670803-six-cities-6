@@ -1,19 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { UserData, AuthorizationStatus } from '../../../api/types/auth';
+import { UserData, AuthorizationStatus } from '../../../api/types/types';
 
 export interface UserState {
   user: UserData | null;
   authorizationStatus: AuthorizationStatus;
 }
 
-export const initialUserState: UserState = {
+export const INITIAL_USER_STATE: UserState = {
   user: null,
   authorizationStatus: AuthorizationStatus.Unknown,
 };
 
 const userSlice = createSlice({
   name: 'user',
-  initialState: initialUserState,
+  initialState: INITIAL_USER_STATE,
   reducers: {
     setUser: (state, action: PayloadAction<UserData | null>) => {
       state.user = action.payload;

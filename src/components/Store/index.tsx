@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
-import { createAPI } from '../../api/Api';
+import { createAPI } from '../../api/api';
 import { userReducer } from './user/user-slice';
 import { commentsReducer } from './comments/comment-slice';
 import { favoritesReducer } from './favorites/favorites-slice';

@@ -6,7 +6,10 @@ import OfferMap from '../../components/map/map';
 import NearPlacesList from '../../components/near-places-list/near-places-list';
 import SortOptions from '../../components/sort-options/sort-options';
 import ReviewForm from '../../components/sent-form/sent-form';
-import { withMemo } from '../With-memo';
+import Review from '../../components/review/review';
+import ReviewList from '../../components/review-list/review-list';
+import Header from '../../components/header/header';
+import { withMemo } from '../hocs';
 
 export const MemoizedCitiesList = withMemo(CitiesList);
 export const MemoizedCityItem = withMemo(CityItem);
@@ -16,3 +19,6 @@ export const MemoizedOfferMap = withMemo(OfferMap);
 export const MemoizedNearPlacesList = withMemo(NearPlacesList);
 export const MemoizedSortOptions = withMemo(SortOptions);
 export const MemoizedReviewForm = withMemo(ReviewForm);
+export const MemoizedReview = withMemo(Review);
+export const MemoizedHeader = withMemo(Header);
+export const MemoizedReviewList = withMemo(ReviewList);

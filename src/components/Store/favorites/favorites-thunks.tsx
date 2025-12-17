@@ -1,12 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { API, toggleFavorite } from '../../../api/Api';
+import { API, toggleFavorite } from '../../../api/api';
 import { AppDispatch, RootState } from '../index';
 
 import { setFavoriteOffers } from './favorites-slice';
 import { setError } from '../offers/offer-slice';
 import { setOfferDetails, setOffers } from '../offers/offer-slice';
 
-import { Offer } from '../../../api/types/offer';
+import { Offer } from '../../../api/types/types';
 
 export const toggleFavoriteOffer = createAsyncThunk<
   void,

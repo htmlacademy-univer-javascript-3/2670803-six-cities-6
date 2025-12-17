@@ -2,9 +2,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { setComments, setCommentsLoading } from './comment-slice';
 import { setError } from '../offers/offer-slice';
-import { Comment, CommentData } from '../../../api/types/comment';
+import { Comment, CommentData } from '../../../api/types/types';
 import { AxiosError } from 'axios';
-import { API } from '../../../api/Api';
+import { API } from '../../../api/api';
 import { AppDispatch } from '..';
 
 export const fetchComments = createAsyncThunk<

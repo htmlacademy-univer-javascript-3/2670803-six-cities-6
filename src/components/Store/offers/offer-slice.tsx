@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Offer } from '../../../api/types/offer';
+import { Offer } from '../../../api/types/types';
 
 export interface OffersState {
   city: string;
@@ -9,8 +9,10 @@ export interface OffersState {
   error: string | null;
 }
 
-export const initialOffersState: OffersState = {
-  city: 'Paris',
+export const DEFAULT_CITY = 'Paris';
+
+export const INITIAL_OFFERS_STATE: OffersState = {
+  city: DEFAULT_CITY,
   offers: [],
   offerDetails: null,
   nearbyOffers: [],
@@ -19,7 +21,7 @@ export const initialOffersState: OffersState = {
 
 const offerSlice = createSlice({
   name: 'offer',
-  initialState: initialOffersState,
+  initialState: INITIAL_OFFERS_STATE,
   reducers: {
     setCity: (state, action: PayloadAction<string>) => {
       state.city = action.payload;

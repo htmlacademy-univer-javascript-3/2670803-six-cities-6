@@ -1,4 +1,4 @@
-import { Offer } from '../api/types/offer';
+import { Offer } from '../../api/types/types';
 
 export interface MainPageProps {
   offers: Offer[];
@@ -25,4 +25,11 @@ export type SortType = 'Popular' | 'Price: low to high' | 'Price: high to low' |
 export interface SortOptionsProps {
   currentSort: SortType;
   onSortChange: (sortType: SortType) => void;
+}
+
+export const enum Sort {
+  Popular = 'Popular',
+  PriceLowToHigh = 'Price: low to high',
+  PriceHighToLow = 'Price: high to low',
+  TopRated = 'Top rated first',
 }

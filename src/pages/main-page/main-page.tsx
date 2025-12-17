@@ -1,22 +1,23 @@
 import { FC, useState, useEffect, useMemo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../components/Store';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '../../components/store';
 import ErrorMessage from '../../components/error-message/error-message';
 import {
   MemoizedCitiesList,
   MemoizedOfferMap,
   MemoizedOfferList,
   MemoizedSortOptions,
+  MemoizedHeader
 } from '../../hocs/memoized-component/memoized-component';
-import { SortType } from '../../components/types';
-import { setCity } from '../../components/Store/offers/offer-slice';
-import { fetchOffers } from '../../components/Store/offers/offer-thunks';
-import { logout } from '../../components/Store/user/user-thunks';
-import { AuthorizationStatus } from '../../api/types/auth';
+import { SortType } from '../../components/types/types';
+import { setCity } from '../../components/store/offers/offer-slice';
+import { fetchOffers } from '../../components/store/offers/offer-thunks';
+import { logout } from '../../components/store/user/user-thunks';
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from '../../components/Store';
+import { RootState } from '../../components/store';
 import Spinner from '../../components/spinner/spinner';
 import MainEmpty from '../../components/main-empty/main-empty';
+import { Sort } from '../../components/types/types';
 
 const selectMainPageData = createSelector(
   (state: RootState) => state.offer,
@@ -36,7 +37,7 @@ const MainPage: FC = () => {
 
   const { selectedCity, offers, error, user, authorizationStatus } = useAppSelector(selectMainPageData);
 
-  const [currentSort, setCurrentSort] = useState<SortType>('Popular');
+  const [currentSort, setCurrentSort] = useState<SortType>(Sort.Popular);
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -49,10 +50,10 @@ const MainPage: FC = () => {
 
   const memoizedSortedOffers = useMemo(
     () => [...filteredOffers].sort((a, b) => {
-      switch (currentSort) {
-        case 'Price: low to high': return a.price - b.price;
-        case 'Price: high to low': return b.price - a.price;
-        case 'Top rated first': return b.rating - a.rating;
+      switch(currentSort) {
+        case Sort.PriceLowToHigh: return a.price - b.price;
+        case Sort.PriceHighToLow: return b.price - a.price;
+        case Sort.TopRated: return b.rating - a.rating;
         default: return 0;
       }
     }),
@@ -62,15 +63,22 @@ const MainPage: FC = () => {
   const filteredOfferCount = memoizedSortedOffers.length;
 
   useEffect(() => {
+    let isMounted = true;
+
     const loadOffers = async () => {
       try {
         await dispatch(fetchOffers());
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
-
     loadOffers();
+
+    return () => {
+      isMounted = false;
+    };
   }, [dispatch]);
 
   const handleCityChange = useCallback((city: string) => {
@@ -85,8 +93,7 @@ const MainPage: FC = () => {
     setActiveOfferId(offerId);
   }, []);
 
-  const handleLogout = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleLogout = useCallback(() => {
     dispatch(logout()).then(() => navigate('/login'));
   }, [dispatch, navigate]);
 
@@ -97,56 +104,12 @@ const MainPage: FC = () => {
   return (
     <div className="page page--gray page--main">
       {error && <ErrorMessage message={error} />}
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <Link className="header__logo-link" to="/">
-                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
-              </Link>
-            </div>
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                {authorizationStatus === AuthorizationStatus.Auth ? (
-                  <>
-                    <li className="header__nav-item user">
-                      <Link className="header__nav-link header__nav-link--profile" to="/favorites">
-                        <div className="header__avatar-wrapper user__avatar-wrapper">
-                          {user && (
-                            <img
-                              className="header__avatar user__avatar"
-                              src={user.avatarUrl}
-                              alt={user.name}
-                              width="20"
-                              height="20"
-                            />
-                          )}
-                        </div>
-                        <span className="header__user-name user__name">
-                          {user ? user.email : 'Loading...'}
-                        </span>
-                        <span className="header__favorite-count">{favoriteCount}</span>
-                      </Link>
-                    </li>
-                    <li className="header__nav-item">
-                      <a className="header__nav-link" href="#" onClick={handleLogout}>
-                        <span className="header__signout">Sign out</span>
-                      </a>
-                    </li>
-                  </>
-                ) : (
-                  <li className="header__nav-item user">
-                    <Link className="header__nav-link header__nav-link--profile" to="/login">
-                      <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                      <span className="header__login">Sign in</span>
-                    </Link>
-                  </li>
-                )}
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <MemoizedHeader
+        authorizationStatus={authorizationStatus}
+        user={user}
+        favoriteCount={favoriteCount}
+        onSignOut={handleLogout}
+      />
 
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>

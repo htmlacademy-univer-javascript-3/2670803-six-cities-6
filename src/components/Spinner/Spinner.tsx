@@ -5,7 +5,9 @@ interface SpinnerProps {
   text?: string;
 }
 
-const Spinner: FC<SpinnerProps> = ({ text = 'Loading...' }) => (
+const DEFAULT_LOADING_TEXT = 'Loading...';
+
+const Spinner: FC<SpinnerProps> = ({ text = DEFAULT_LOADING_TEXT }) => (
   <div className={styles.spinnerContainer}>
     <div className={styles.spinner}></div>
     <p className={styles.text}>{text}</p>
