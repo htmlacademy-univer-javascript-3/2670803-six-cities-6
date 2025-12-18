@@ -1,32 +1,31 @@
 import { FC, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import MainPage from './pages/MainPage/mainPage';
-import NotFoundPage from './pages/NotFound/notFoundPage';
-import LoginPage from './pages/LoginPage/loginPage';
-import FavoritesPage from './pages/FavoritesPage/favoritesPage';
-import OfferPage from './pages/OfferPage/offerPage';
-import PrivateRoute from './components/PrivateRoute/privateRoute';
-import { useAppDispatch, useAppSelector } from './components/Store';
-import Spinner from './components/Spinner/Spinner';
-import { checkAuth, logout } from './components/Store/api-actions';
+import MainPage from './pages/main-page/main-page';
+import NotFoundPage from './pages/not-found-page/not-found-page';
+import LoginPage from './pages/login-page/login-page';
+import FavoritesPage from './pages/favorites-page/favorites-page';
+import OfferPage from './pages/offer-page/offer-page';
+import PrivateRoute from './components/private-route/private-route';
+import { useAppDispatch, useAppSelector } from './components/store';
+import Spinner from './components/spinner/spinner';
+import { checkAuth, logout } from './components/store/user/user-thunks';
+import { AuthorizationStatus } from './api/types/types';
 
 const App: FC = () => {
   const dispatch = useAppDispatch();
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const user = useAppSelector((state) => state.user);
+  const authorizationStatus = useAppSelector((state) => state.user.authorizationStatus);
+  const user = useAppSelector((state) => state.user.user);
 
   useEffect(() => {
     dispatch(checkAuth());
   }, [dispatch]);
 
   const handleSignOut = () => {
-    (async () => {
-      await dispatch(logout());
-    })();
+    dispatch(logout()).then(() => {});
   };
 
-  if (authorizationStatus === 'UNKNOWN') {
-    return <Spinner />;
+  if (authorizationStatus === AuthorizationStatus.Unknown) {
+    return <Spinner isLoading text="Checking authentication..." minDuration={500} />;
   }
 
   return (
@@ -41,7 +40,7 @@ const App: FC = () => {
           />
         }
         />
-        <Route path="/login" element={authorizationStatus === 'AUTH' ? (<Navigate to="/" replace />) : (<LoginPage />)}/>
+        <Route path="/login" element={authorizationStatus === AuthorizationStatus.Auth ? (<Navigate to="/" replace />) : (<LoginPage />)}/>
         <Route element={<PrivateRoute />}>
           <Route path="/favorites" element={<FavoritesPage />} />
         </Route>
