@@ -1,10 +1,10 @@
 import { FC, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../components/store';
+import { useAppSelector, useAppDispatch } from '../../components/Store';
 import Spinner from '../../components/spinner/spinner';
 import { MemoizedOfferList } from '../../hocs/memoized-component/memoized-component';
-import { logout } from '../../components/store/user/user-thunks';
-import { fetchFavoriteOffers } from '../../components/store/favorites/favorites-thunks';
+import { logout } from '../../components/Store/user/user-thunks';
+import { fetchFavoriteOffers } from '../../components/Store/favorites/favorites-thunks';
 import { AuthorizationStatus } from '../../api/types/types';
 import FavoritesEmpty from '../../components/favorite-empty/favorite-empty';
 import ErrorMessage from '../../components/error-message/error-message';

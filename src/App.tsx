@@ -6,9 +6,9 @@ import LoginPage from './pages/login-page/login-page';
 import FavoritesPage from './pages/favorites-page/favorites-page';
 import OfferPage from './pages/offer-page/offer-page';
 import PrivateRoute from './components/private-route/private-route';
-import { useAppDispatch, useAppSelector } from './components/store';
+import { useAppDispatch, useAppSelector } from './components/Store';
 import Spinner from './components/spinner/spinner';
-import { checkAuth, logout } from './components/store/user/user-thunks';
+import { checkAuth, logout } from './components/Store/user/user-thunks';
 import { AuthorizationStatus } from './api/types/types';
 
 const App: FC = () => {

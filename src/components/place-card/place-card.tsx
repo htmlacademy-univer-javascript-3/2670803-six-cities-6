@@ -1,8 +1,8 @@
 import { FC, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Offer } from '../../api/types/types';
-import { useAppDispatch, useAppSelector } from '../store';
-import { toggleFavoriteOffer } from '../store/favorites/favorites-thunks';
+import { useAppDispatch, useAppSelector } from '../Store';
+import { toggleFavoriteOffer } from '../Store/favorites/favorites-thunks';
 import { AuthorizationStatus } from '../../api/types/types';
 
 type PlaceCardProps = {

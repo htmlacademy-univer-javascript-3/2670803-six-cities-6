@@ -1,11 +1,11 @@
 import { FC, useState, FormEvent, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../components/store';
+import { useAppDispatch, useAppSelector } from '../../components/Store';
 import Spinner from '../../components/spinner/spinner';
-import { login } from '../../components/store/user/user-thunks';
+import { login } from '../../components/Store/user/user-thunks';
 import { AuthorizationStatus } from '../../api/types/types';
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from '../../components/store';
+import { RootState } from '../../components/Store';
 import { MemoizedHeader } from '../../hocs/memoized-component/memoized-component';
 
 const selectLoginData = createSelector(

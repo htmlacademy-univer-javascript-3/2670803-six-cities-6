@@ -1,6 +1,6 @@
 import { FC, useState, ChangeEvent, FormEvent, useCallback, useMemo } from 'react';
-import { useAppDispatch, useAppSelector } from '../store';
-import { postComment } from '../store/comments/comment-thunks';
+import { useAppDispatch, useAppSelector } from '../Store';
+import { postComment } from '../Store/comments/comment-thunks';
 
 type ReviewFormProps = {
   offerId: string;

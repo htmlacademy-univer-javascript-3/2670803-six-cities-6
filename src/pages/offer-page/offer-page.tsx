@@ -1,14 +1,14 @@
 import { FC, useCallback, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../components/store';
+import { useAppSelector, useAppDispatch } from '../../components/Store';
 import Spinner from '../../components/spinner/spinner';
 import { MemoizedOfferMap, MemoizedReviewForm, MemoizedReviewList, MemoizedNearPlacesList, MemoizedHeader} from '../../hocs/memoized-component/memoized-component';
-import { fetchOfferData } from '../../components/store/offers/offer-thunks';
-import { logout } from '../../components/store/user/user-thunks';
-import { toggleFavoriteOffer } from '../../components/store/favorites/favorites-thunks';
+import { fetchOfferData } from '../../components/Store/offers/offer-thunks';
+import { logout } from '../../components/Store/user/user-thunks';
+import { toggleFavoriteOffer } from '../../components/Store/favorites/favorites-thunks';
 import { AuthorizationStatus } from '../../api/types/types';
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from '../../components/store';
+import { RootState } from '../../components/Store';
 
 const selectOfferPageData = createSelector(
   (state: RootState) => state.offer,

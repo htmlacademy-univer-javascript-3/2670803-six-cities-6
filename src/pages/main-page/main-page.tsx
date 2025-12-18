@@ -1,6 +1,6 @@
 import { FC, useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../components/store';
+import { useAppSelector, useAppDispatch } from '../../components/Store';
 import ErrorMessage from '../../components/error-message/error-message';
 import {
   MemoizedCitiesList,
@@ -10,11 +10,11 @@ import {
   MemoizedHeader
 } from '../../hocs/memoized-component/memoized-component';
 import { SortType } from '../../components/types/types';
-import { setCity } from '../../components/store/offers/offer-slice';
-import { fetchOffers } from '../../components/store/offers/offer-thunks';
-import { logout } from '../../components/store/user/user-thunks';
+import { setCity } from '../../components/Store/offers/offer-slice';
+import { fetchOffers } from '../../components/Store/offers/offer-thunks';
+import { logout } from '../../components/Store/user/user-thunks';
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from '../../components/store';
+import { RootState } from '../../components/Store';
 import Spinner from '../../components/spinner/spinner';
 import MainEmpty from '../../components/main-empty/main-empty';
 import { Sort } from '../../components/types/types';
