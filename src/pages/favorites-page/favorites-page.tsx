@@ -37,12 +37,13 @@ const FavoritesPage: FC = () => {
     });
   }, [dispatch, navigate]);
 
-  if (isFavoriteLoading) {
-    return <Spinner />;
-  }
-
   return (
     <div className="page">
+      <Spinner
+        isLoading={isFavoriteLoading}
+        minDuration={1500}
+        text="Loading favorites"
+      />
       {error && <ErrorMessage message={error} />}
       <MemoizedHeader
         authorizationStatus={authorizationStatus}

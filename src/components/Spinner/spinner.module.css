@@ -1,83 +1,66 @@
-.spinner-container {
+.wrapper {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.6);
+
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(4px);
+
   z-index: 1000;
-  animation: fadeIn 0.3s ease-in-out;
 }
 
-.spinner {
-  width: 80px;
-  height: 80px;
-  border: 8px solid rgba(255, 255, 255, 0.2);
-  border-top: 8px solid #4facfe;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
-  margin-bottom: 20px;
+.wave {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
 }
 
-.spinner::after {
-  content: '';
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(79,172,254,0.3) 0%, transparent 70%);
-  position: absolute;
-  animation: pulse 1.5s ease-in-out infinite;
+.wave span {
+  width: 6px;
+  height: 24px;
+  border-radius: 4px;
+
+  background: linear-gradient(
+    180deg,
+    #e6f2ff 0%,
+    #9fd3ff 100%
+  );
+
+  opacity: 0.35;
+
+  animation: wave 1.2s ease-in-out infinite;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+.wave span:nth-child(1) {
+  animation-delay: 0s;
 }
 
-@keyframes pulse {
+.wave span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.wave span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #e6f2ff;
+  opacity: 0.85;
+}
+
+@keyframes wave {
   0%, 100% {
-    transform: scale(0.8);
-    opacity: 0.5;
+    transform: scaleY(0.4);
+    opacity: 0.3;
   }
   50% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.spinner-container p {
-  color: #ffffff;
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0;
-  text-align: center;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-  animation: textPulse 1.5s ease-in-out infinite;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes textPulse {
-  0%, 100% {
-    opacity: 0.7;
-  }
-  50% {
+    transform: scaleY(1);
     opacity: 1;
   }
 }

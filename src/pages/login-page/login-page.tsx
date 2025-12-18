@@ -80,12 +80,13 @@ const LoginPage: FC = () => {
       .finally(() => setIsSubmitting(false));
   }, [dispatch, email, password, validateForm]);
 
-  if (isSubmitting) {
-    return <Spinner text="Signing in..." />;
-  }
-
   return (
     <div className="page page--gray page--login">
+      <Spinner
+        isLoading={isSubmitting}
+        minDuration={1500}
+        text="Signing in..."
+      />
       <MemoizedHeader
         authorizationStatus={authorizationStatus}
         user={null}

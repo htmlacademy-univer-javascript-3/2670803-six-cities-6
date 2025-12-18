@@ -97,12 +97,13 @@ const MainPage: FC = () => {
     dispatch(logout()).then(() => navigate('/login'));
   }, [dispatch, navigate]);
 
-  if (isLoading) {
-    return <Spinner text="Loading offers..." />;
-  }
-
   return (
     <div className="page page--gray page--main">
+      <Spinner
+        isLoading={isLoading}
+        minDuration={1500}
+        text="Loading offers..."
+      />
       {error && <ErrorMessage message={error} />}
       <MemoizedHeader
         authorizationStatus={authorizationStatus}

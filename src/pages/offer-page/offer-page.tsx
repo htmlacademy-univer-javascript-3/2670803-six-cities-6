@@ -9,7 +9,6 @@ import { toggleFavoriteOffer } from '../../components/store/favorites/favorites-
 import { AuthorizationStatus } from '../../api/types/types';
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../components/store';
-import NotFoundPage from '../not-found-page/not-found-page';
 
 const selectOfferPageData = createSelector(
   (state: RootState) => state.offer,
@@ -83,21 +82,7 @@ const OfferPage: FC = () => {
 
   if (!offerDetails) {
     return (
-      <div className="page">
-        <div className="container" style={{ textAlign: 'center', padding: '50px' }}>
-          <Spinner text="Loading offer..." />
-        </div>
-      </div>
-    );
-  }
-
-  if (!offerDetails.id) {
-    return (
-      <NotFoundPage
-        authorizationStatus={authorizationStatus}
-        user={user}
-        handleSignOut={handleLogout}
-      />
+      <Spinner isLoading minDuration={1500} text="Loading offer..." />
     );
   }
 
@@ -210,7 +195,15 @@ const OfferPage: FC = () => {
               </div>
 
               <section className="offer__reviews reviews">
-                {commentsLoading ? <Spinner text="Loading comments..." /> : <MemoizedReviewList reviews={reviews} />}
+                {commentsLoading ? (
+                  <Spinner
+                    isLoading
+                    minDuration={1000}
+                    text="Loading comments..."
+                  />
+                ) : (
+                  <MemoizedReviewList reviews={reviews} />
+                )}
                 {authorizationStatus === AuthorizationStatus.Auth && offerDetails.id && (
                   <MemoizedReviewForm offerId={offerDetails.id} />
                 )}

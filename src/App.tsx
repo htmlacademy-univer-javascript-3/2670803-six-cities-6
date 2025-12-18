@@ -25,7 +25,7 @@ const App: FC = () => {
   };
 
   if (authorizationStatus === AuthorizationStatus.Unknown) {
-    return <Spinner />;
+    return <Spinner isLoading text="Checking authentication..." minDuration={500} />;
   }
 
   return (
