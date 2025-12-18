@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { useAppDispatch } from '../Store';
-import { setError } from '../Store/offers/offer-slice';
+import { useAppDispatch } from '../store';
+import { setError } from '../store/offers/offer-slice';
 import styles from './error-message.module.css';
 
 interface ErrorMessageProps {
