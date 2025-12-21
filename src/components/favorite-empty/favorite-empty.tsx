@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 const FavoritesEmpty: FC = () => (
-  <section className="favorites favorites--empty">
+  <section data-testid="favorites-empty" className="favorites favorites--empty">
     <h1 className="visually-hidden">Favorites (empty)</h1>
     <div className="favorites__status-wrapper">
       <b className="favorites__status">Nothing yet saved.</b>

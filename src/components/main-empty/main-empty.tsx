@@ -5,7 +5,7 @@ interface MainEmptyProps {
 }
 
 const MainEmpty: FC<MainEmptyProps> = ({ city }) => (
-  <main className="page__main page__main--index page__main--index-empty">
+  <main data-testid="main-empty" className="page__main page__main--index page__main--index-empty">
     <h1 className="visually-hidden">Cities</h1>
     <div className="tabs"></div>
     <div className="cities">
