@@ -23,7 +23,12 @@ const ReviewList: FC<ReviewListProps> = ({ reviews }) => {
       </h2>
       <ul className="reviews__list">
         {sortedReviews.map((review) => (
-          <MemoizedReview key={review.id} review={review} />
+          <MemoizedReview
+            key={review.id}
+            review={review}
+            data-testid="memoized-review"
+            data-review-id={review.id}
+          />
         ))}
       </ul>
     </section>
