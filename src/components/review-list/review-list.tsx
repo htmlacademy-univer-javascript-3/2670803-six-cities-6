@@ -1,5 +1,5 @@
 import { FC, useMemo } from 'react';
-import { MemoizedReview } from '../../hocs/memoized-component/memoized-component';
+import { MemoizedReview } from '../../components/memoized-component/memoized-component';
 import { ReviewType } from '../types/types';
 
 interface ReviewListProps {

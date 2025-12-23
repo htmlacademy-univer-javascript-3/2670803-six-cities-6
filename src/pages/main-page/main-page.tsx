@@ -8,7 +8,7 @@ import {
   MemoizedOfferList,
   MemoizedSortOptions,
   MemoizedHeader
-} from '../../hocs/memoized-component/memoized-component';
+} from '../../components/memoized-component/memoized-component';
 import { SortType } from '../../components/types/types';
 import { setCity } from '../../components/store/offers/offer-slice';
 import { fetchOffers } from '../../components/store/offers/offer-thunks';

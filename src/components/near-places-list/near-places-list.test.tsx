@@ -11,7 +11,7 @@ interface MockPlaceCardProps {
   onMouseLeave?: MouseEventHandler<HTMLDivElement>;
 }
 
-vi.mock('../../hocs/memoized-component/memoized-component', () => ({
+vi.mock('../../components/memoized-component/memoized-component', () => ({
   MemoizedPlaceCard: ({ offer, onMouseEnter, onMouseLeave }: MockPlaceCardProps) => (
     <div
       data-testid={`place-card-${offer.id}`}
