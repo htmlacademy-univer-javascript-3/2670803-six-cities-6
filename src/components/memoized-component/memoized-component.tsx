@@ -9,7 +9,7 @@ import ReviewForm from '../../components/sent-form/sent-form';
 import Review from '../../components/review/review';
 import ReviewList from '../../components/review-list/review-list';
 import Header from '../../components/header/header';
-import { withMemo } from '../hocs';
+import { withMemo } from '../../hocs/hocs';
 
 export const MemoizedCitiesList = withMemo(CitiesList);
 export const MemoizedCityItem = withMemo(CityItem);

@@ -89,6 +89,7 @@ const ReviewForm: FC<ReviewFormProps> = ({ offerId }) => {
               type="radio"
               checked={formData.rating === num}
               onChange={handleFieldChange}
+              aria-label={`${num} stars`}
             />
             <label htmlFor={`${num}-stars`} className="reviews__rating-label form__rating-label">
               <svg className="form__star-image" width="37" height="33">

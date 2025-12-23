@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './not-found-page.module.css';
 import { AuthorizationStatus } from '../../api/types/types';
-import { MemoizedHeader } from '../../hocs/memoized-component/memoized-component';
+import { MemoizedHeader } from '../../components/memoized-component/memoized-component';
 import Footer from '../../components/footer/footer';
 
 interface NotFoundPageProps {

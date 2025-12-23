@@ -3,11 +3,13 @@ import { ReviewType } from '../types/types';
 
 interface ReviewProps {
   review: ReviewType;
+  'data-testid'?: string;
+  'data-review-id'?: string;
 }
 
 const MAX_RATING = 5;
 
-const Review: FC<ReviewProps> = ({ review }) => {
+const Review: FC<ReviewProps> = ({ review, 'data-testid': testId, 'data-review-id': reviewId }) => {
   const widthPercent = (review.rating / MAX_RATING) * 100;
 
   const formattedDate = useMemo(
@@ -20,7 +22,7 @@ const Review: FC<ReviewProps> = ({ review }) => {
   );
 
   return (
-    <li className="reviews__item">
+    <li className="reviews__item" {...(testId ? { 'data-testid': testId } : {})} {...(reviewId ? { 'data-review-id': reviewId } : {})}>
       <div className="reviews__user user">
         <div className="reviews__avatar-wrapper user__avatar-wrapper">
           <img

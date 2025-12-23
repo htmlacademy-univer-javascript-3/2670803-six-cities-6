@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../components/store';
 import Spinner from '../../components/spinner/spinner';
-import { MemoizedOfferMap, MemoizedReviewForm, MemoizedReviewList, MemoizedNearPlacesList, MemoizedHeader} from '../../hocs/memoized-component/memoized-component';
+import { MemoizedOfferMap, MemoizedReviewForm, MemoizedReviewList, MemoizedNearPlacesList, MemoizedHeader} from '../../components/memoized-component/memoized-component';
 import { fetchOfferData } from '../../components/store/offers/offer-thunks';
 import { logout } from '../../components/store/user/user-thunks';
 import { toggleFavoriteOffer } from '../../components/store/favorites/favorites-thunks';

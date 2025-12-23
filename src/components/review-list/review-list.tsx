@@ -1,5 +1,5 @@
 import { FC, useMemo } from 'react';
-import { MemoizedReview } from '../../hocs/memoized-component/memoized-component';
+import { MemoizedReview } from '../../components/memoized-component/memoized-component';
 import { ReviewType } from '../types/types';
 
 interface ReviewListProps {
@@ -23,7 +23,12 @@ const ReviewList: FC<ReviewListProps> = ({ reviews }) => {
       </h2>
       <ul className="reviews__list">
         {sortedReviews.map((review) => (
-          <MemoizedReview key={review.id} review={review} />
+          <MemoizedReview
+            key={review.id}
+            review={review}
+            data-testid="memoized-review"
+            data-review-id={review.id}
+          />
         ))}
       </ul>
     </section>

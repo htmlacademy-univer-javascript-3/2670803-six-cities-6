@@ -1,6 +1,6 @@
 import { FC, useCallback } from 'react';
 import { Offer } from '../../api/types/types';
-import { MemoizedPlaceCard } from '../../hocs/memoized-component/memoized-component';
+import { MemoizedPlaceCard } from '../../components/memoized-component/memoized-component';
 
 type NearPlacesListProps = {
   offers: Offer[];

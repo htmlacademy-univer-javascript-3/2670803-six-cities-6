@@ -6,7 +6,7 @@ import { login } from '../../components/store/user/user-thunks';
 import { AuthorizationStatus } from '../../api/types/types';
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../components/store';
-import { MemoizedHeader } from '../../hocs/memoized-component/memoized-component';
+import { MemoizedHeader } from '../../components/memoized-component/memoized-component';
 
 const selectLoginData = createSelector(
   (state: RootState) => state.user.authorizationStatus,
@@ -120,7 +120,6 @@ const LoginPage: FC = () => {
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required
                   disabled={isSubmitting}
                 />
               </div>
@@ -133,7 +132,6 @@ const LoginPage: FC = () => {
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required
                   disabled={isSubmitting}
                 />
               </div>
