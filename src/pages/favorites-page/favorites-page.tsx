@@ -11,6 +11,8 @@ import ErrorMessage from '../../components/error-message/error-message';
 import { MemoizedHeader } from '../../components/memoized-component/memoized-component';
 import Footer from '../../components/footer/footer';
 
+const MIN_SPINNER_DURATION = 1500;
+
 const FavoritesPage: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ const FavoritesPage: FC = () => {
     <div className="page">
       <Spinner
         isLoading={isFavoriteLoading}
-        minDuration={1500}
+        minDuration={MIN_SPINNER_DURATION}
         text="Loading favorites"
       />
       {error && <ErrorMessage message={error} />}

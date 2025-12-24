@@ -10,6 +10,8 @@ import { AuthorizationStatus } from '../../api/types/types';
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../components/store';
 
+const MIN_SPINNER_DURATION = 1500;
+
 const selectOfferPageData = createSelector(
   (state: RootState) => state.offer,
   (state: RootState) => state.user,
@@ -82,7 +84,7 @@ const OfferPage: FC = () => {
 
   if (!offerDetails) {
     return (
-      <Spinner isLoading minDuration={1500} text="Loading offer..." />
+      <Spinner isLoading minDuration={MIN_SPINNER_DURATION} text="Loading offer..." />
     );
   }
 

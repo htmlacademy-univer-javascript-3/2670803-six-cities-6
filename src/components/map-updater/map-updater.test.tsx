@@ -49,7 +49,7 @@ describe('MapUpdater component', () => {
   it('calls map.setView with the first offer location', () => {
     render(<MapUpdater offers={mockOffers} />);
     expect(mockSetView).toHaveBeenCalledTimes(1);
-    expect(mockSetView).toHaveBeenCalledWith([10, 20], 13); // DEFAULT_ZOOM = 13
+    expect(mockSetView).toHaveBeenCalledWith([10, 20], 13);
   });
 
   it('does not call map.setView if offers array is empty', () => {

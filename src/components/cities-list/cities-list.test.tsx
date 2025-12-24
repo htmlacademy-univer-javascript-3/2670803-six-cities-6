@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-import CitiesList from './citites-list';
+import CitiesList from './cities-list';
 
 describe('CitiesList component', () => {
   it('renders all cities from the list', () => {

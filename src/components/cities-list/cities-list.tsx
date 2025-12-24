@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import CityItem from '../city-item/city-item';
 
-interface CitiesListProps {
+export interface CitiesListProps {
   currentCity: string;
   onCityChange: (city: string) => void;
 }

@@ -8,6 +8,17 @@ import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../components/store';
 import { MemoizedHeader } from '../../components/memoized-component/memoized-component';
 
+const MIN_SPINNER_DURATION = 1500;
+
+const ERROR_STYLE = {
+  color: '#5a0000ff',
+  backgroundColor: '#ffe6e6',
+  padding: '10px',
+  borderRadius: '4px',
+  marginBottom: '15px',
+  textAlign: 'center' as const,
+};
+
 const selectLoginData = createSelector(
   (state: RootState) => state.user.authorizationStatus,
   (state: RootState) => state.offer.error,
@@ -84,7 +95,7 @@ const LoginPage: FC = () => {
     <div className="page page--gray page--login">
       <Spinner
         isLoading={isSubmitting}
-        minDuration={1500}
+        minDuration={MIN_SPINNER_DURATION}
         text="Signing in..."
       />
       <MemoizedHeader
@@ -98,15 +109,7 @@ const LoginPage: FC = () => {
           <section className="login">
             <h1 className="login__title">Sign in</h1>
             {formError && (
-              <div className="login__error" style={{
-                color: '#5a0000ff',
-                backgroundColor: '#ffe6e6',
-                padding: '10px',
-                borderRadius: '4px',
-                marginBottom: '15px',
-                textAlign: 'center'
-              }}
-              >
+              <div className="login__error" style={ERROR_STYLE}>
                 <p>{formError}</p>
               </div>
             )}
