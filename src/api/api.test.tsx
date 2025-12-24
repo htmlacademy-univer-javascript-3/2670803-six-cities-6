@@ -77,7 +77,7 @@ describe('API module', () => {
 
     const offers = await apiModule.getFavoriteOffers();
     expect(offers).toEqual([mockOffer]);
-    expect(axiosInstance.get).toHaveBeenCalledWith('/favourites');
+    expect(axiosInstance.get).toHaveBeenCalledWith('/favorite');
   });
 
   it('toggleFavorite should post favorite status', async () => {

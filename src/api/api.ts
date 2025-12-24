@@ -80,7 +80,7 @@ export const sendComment = async (offerId: string, commentData: CommentData): Pr
 };
 
 export const getFavoriteOffers = async (): Promise<Offer[]> => {
-  const response = await API.get<Offer[]>('/favourites');
+  const response = await API.get<Offer[]>('/favorite');
   return response.data;
 };
 

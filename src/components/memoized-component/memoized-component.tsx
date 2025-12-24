@@ -1,4 +1,4 @@
-import CitiesList from '../../components/cities-list/citites-list';
+import CitiesList from '../cities-list/cities-list';
 import CityItem from '../../components/city-item/city-item';
 import OfferList from '../../components/offer-list/offer-list';
 import PlaceCard from '../../components/place-card/place-card';

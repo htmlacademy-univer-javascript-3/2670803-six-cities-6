@@ -19,6 +19,8 @@ import Spinner from '../../components/spinner/spinner';
 import MainEmpty from '../../components/main-empty/main-empty';
 import { Sort } from '../../components/types/types';
 
+const MIN_SPINNER_DURATION = 1500;
+
 const selectMainPageData = createSelector(
   (state: RootState) => state.offer,
   (state: RootState) => state.user,
@@ -101,7 +103,7 @@ const MainPage: FC = () => {
     <div className="page page--gray page--main">
       <Spinner
         isLoading={isLoading}
-        minDuration={1500}
+        minDuration={MIN_SPINNER_DURATION}
         text="Loading offers..."
       />
       {error && <ErrorMessage message={error} />}

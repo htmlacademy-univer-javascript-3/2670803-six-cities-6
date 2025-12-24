@@ -6,13 +6,11 @@ import * as storeHooks from './components/store';
 import { AuthorizationStatus, UserData } from './api/types/types';
 import { RootState } from './components/store';
 
-// Мокаем хуки Redux
 vi.mock('./components/store', () => ({
   useAppSelector: vi.fn(),
   useAppDispatch: () => vi.fn(),
 }));
 
-// Типизированный хелпер для мокирования useAppSelector
 const mockSelector = (state: Partial<RootState>) =>
   (storeHooks.useAppSelector as unknown as jest.MockedFunction<
     (selector: (state: RootState) => unknown) => unknown

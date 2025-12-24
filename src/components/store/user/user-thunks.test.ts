@@ -9,7 +9,6 @@ import { AuthorizationStatus, UserData, LoginResponse } from '../../../api/types
 import type * as ApiModule from '../../../api/api';
 import type { MockedFunction } from 'vitest';
 
-// Мокаем saveToken и dropToken строго
 vi.mock('../../../api/api', async (): Promise<Partial<typeof import('../../../api/api')>> => {
   const actual: typeof ApiModule = await vi.importActual('../../../api/api');
   return {
@@ -38,7 +37,6 @@ describe('user thunks', () => {
   beforeEach(() => {
     dispatch = vi.fn() as AppDispatch;
 
-    // Строго типизированный мок Axios
     apiMock = {
       get: vi.fn<[string, AxiosRequestConfig?], Promise<AxiosResponse<UserData>>>(),
       post: vi.fn<[string, unknown, AxiosRequestConfig?], Promise<AxiosResponse<LoginResponse>>>(),
